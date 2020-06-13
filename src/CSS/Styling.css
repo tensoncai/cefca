@@ -1,0 +1,47 @@
+.navbar {
+  background-color: black;
+  height: 150px;
+  padding: 100em;
+}
+
+#navBrand {
+  font-size: 50px;
+  padding-right: 40px;
+}
+
+#collasible-nav-dropdown {
+  color:white;
+  font-size: 23px;
+  padding-right: 30px;
+}
+
+#collasible-nav-dropdown::after {
+  content: none;
+  padding: 0px 0px;
+}
+
+#navItem {
+  background-color: black;
+  color: white;
+  padding: 5px;
+}
+
+.body {
+  /* padding: 250px; */
+  height: 650px;
+  color: white;
+  text-align: center;
+  font-size: 90px;
+  position: relative;
+  width: 100%;
+}
+
+.welcome {
+  color: white;
+}
+
+.footer {
+  color: white;
+  background-color: black;
+  padding: 100px;
+}
