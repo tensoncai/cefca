@@ -1,0 +1,25 @@
+{
+  "files": {
+    "main.css": "/cefca/static/css/main.b8444fac.chunk.css",
+    "main.js": "/cefca/static/js/main.d7f5d5c1.chunk.js",
+    "main.js.map": "/cefca/static/js/main.d7f5d5c1.chunk.js.map",
+    "runtime-main.js": "/cefca/static/js/runtime-main.4b396b23.js",
+    "runtime-main.js.map": "/cefca/static/js/runtime-main.4b396b23.js.map",
+    "static/css/2.af3c1da9.chunk.css": "/cefca/static/css/2.af3c1da9.chunk.css",
+    "static/js/2.f1da0863.chunk.js": "/cefca/static/js/2.f1da0863.chunk.js",
+    "static/js/2.f1da0863.chunk.js.map": "/cefca/static/js/2.f1da0863.chunk.js.map",
+    "index.html": "/cefca/index.html",
+    "precache-manifest.fff42f7e92dc3e7036be7953120c2983.js": "/cefca/precache-manifest.fff42f7e92dc3e7036be7953120c2983.js",
+    "service-worker.js": "/cefca/service-worker.js",
+    "static/css/2.af3c1da9.chunk.css.map": "/cefca/static/css/2.af3c1da9.chunk.css.map",
+    "static/css/main.b8444fac.chunk.css.map": "/cefca/static/css/main.b8444fac.chunk.css.map",
+    "static/js/2.f1da0863.chunk.js.LICENSE.txt": "/cefca/static/js/2.f1da0863.chunk.js.LICENSE.txt"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.4b396b23.js",
+    "static/css/2.af3c1da9.chunk.css",
+    "static/js/2.f1da0863.chunk.js",
+    "static/css/main.b8444fac.chunk.css",
+    "static/js/main.d7f5d5c1.chunk.js"
+  ]
+}
