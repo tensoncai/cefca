@@ -38,13 +38,7 @@ class NavBar extends Component {
               title="Sermons" id="collasible-nav-dropdown">
               <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
             </NavDropdown>
-            <NavDropdown 
-              onMouseEnter = { () => this.setState({ contact: true })}
-              onMouseLeave = { () => this.setState({ contact:false })}
-              show={ this.state.contact }
-              title="Contact" id="collasible-nav-dropdown">
-              <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
-            </NavDropdown>
+            <Nav.Link href="/contact">Contact</Nav.Link>
           </Nav>
         </Navbar.Collapse>
       </Navbar>
