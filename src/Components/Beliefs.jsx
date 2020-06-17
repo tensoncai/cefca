@@ -1,6 +1,4 @@
 import React, { Component } from "react";
-import { Button, Form, FormControl, MenuItem } from 'react-bootstrap';
-import "../CSS/Styling.css";
 import NavBar from "./NavBar";
 import Footer from "./Footer";
 

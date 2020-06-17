@@ -2,11 +2,9 @@ import React, { Component } from "react";
 import {
   BrowserRouter as Router,
   Switch,
-  Redirect,
   Route
 } from "react-router-dom";
 import Home from "./Home";
-import NavBar from "./NavBar"
 import Beliefs from "./Beliefs"
 class AppContainer extends Component {
 

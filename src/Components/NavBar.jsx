@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import { Collapse, Button, Form, FormControl, Navbar, Nav, NavItem, NavDropdown } from 'react-bootstrap';
 import "../CSS/Styling.css";
 import {Dropdown} from 'react-bootstrap'
-// import { Collapse } from 'react-transition-group';
 
 class NavBar extends Component {
   state = {
