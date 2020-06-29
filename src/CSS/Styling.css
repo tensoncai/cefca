@@ -1,17 +1,31 @@
 .navbar {
-  background-color: black;
-  height: 150px;
+  height: 80px;
+  background-color: white;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 20px;
+  /* background-image: linear-gradient(15deg, #0072ff 0%, #00c6ff 100%); */
 }
 
-#navBrand {
-  font-size: 50px;
-  padding-right: 40px;
+.ml-auto {
+  padding: 20px;
 }
 
 #collasible-nav-dropdown {
-  color:white;
-  font-size: 23px;
-  padding-right: 30px;
+  color: #0072ff;
+  margin: 5px;
+}
+
+#navLink {
+  color: #0072ff;
+  margin: 5px;
+}
+
+#navBrand {
+  font-family: 'Istok Web', sans-serif;
+  font-size: 52px;
+  margin-left: 20px;
+  color: #0072ff;
 }
 
 #collasible-nav-dropdown::after {
@@ -19,28 +33,39 @@
   padding: 0px 0px;
 }
 
-#navItem {
-  background-color: black;
-  color: white;
-  padding: 5px;
-}
-
 .mainImageText {
   background-size: cover;
   overflow: hidden;
-  background-position: center; 
-  background-repeat  : no-repeat;
-  height: 400px; 
-  font-size: 70px; 
+  background-position: center;
+  background-repeat: no-repeat;
+  height: 400px;
+}
+
+.welcomeText {
+  font-size: 70px;
+  text-align: left;
+  font-family: 'Istok Web', sans-serif;
+  padding-left: 50px;
+  padding-top: 20px;
+}
+
+.connectWithUsText {
+  font-size: 70px;
   text-align: center;
-  color: white;
-  font-weight: 150;
-  line-height: 400px;
-  margin-bottom: 30px
+  font-family: 'Istok Web', sans-serif;
+  padding-top: 40px;
+  background-color: lightgray;
+  height: 300px;
 }
 
 .footer {
+  /* position: absolute; */
   color: white;
-  background-color: black;
+  background-color: #45526e;
   padding: 100px;
+  font-size: 18px;
+  left: 0;
+  bottom: 0;
+  height: 100px;
+  width: 100%;
 }

@@ -16,29 +16,17 @@ class NavBar extends Component {
         <Navbar.Brand id="navBrand" href="/">CEFCA</Navbar.Brand>
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
         <Navbar.Collapse id="responsive-navbar-nav">
-          <Nav className="mr-auto">
-            <NavDropdown
-              onMouseEnter = { () => this.setState({ about: true })}
-              onMouseLeave = { () => this.setState({ about: false })}
-              show={ this.state.about }
-              title="About" id="collasible-nav-dropdown">
+          <Nav className="ml-auto">
+            <NavDropdown title="About" id="collasible-nav-dropdown">
                 <NavDropdown.Item id="navItem" href="/beliefs">What We Believe</NavDropdown.Item>
             </NavDropdown>
-            <NavDropdown
-              onMouseEnter = { () => this.setState({ connect: true })}
-              onMouseLeave = { () => this.setState({ connect:false })}
-              show={ this.state.connect }
-              title="Connect" id="collasible-nav-dropdown">
+            <NavDropdown title="Connect" id="collasible-nav-dropdown">
               <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
             </NavDropdown>
-            <NavDropdown 
-              onMouseEnter = { () => this.setState({ sermons: true })}
-              onMouseLeave = { () => this.setState({ sermons:false })}
-              show={ this.state.sermons }
-              title="Sermons" id="collasible-nav-dropdown">
+            <NavDropdown title="Sermons" id="collasible-nav-dropdown">
               <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
             </NavDropdown>
-            <Nav.Link href="/contact">Contact</Nav.Link>
+            <Nav.Link id="navLink" href="/contact">Contact</Nav.Link>
           </Nav>
         </Navbar.Collapse>
       </Navbar>
