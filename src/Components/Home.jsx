@@ -20,6 +20,12 @@ class Home extends Component {
               Free Church of Ames
             </p>
           </div>
+          <div>
+          <audio controls>
+            <source src="6-28-2020主日学：罗马书.m4a" type="audio/mpeg"/>
+            Your browser does not support the audio tag.
+          </audio> 
+          </div>
         </div>
         <Footer />
       </div>

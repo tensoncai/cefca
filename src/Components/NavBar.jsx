@@ -24,7 +24,7 @@ class NavBar extends Component {
               <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
             </NavDropdown>
             <NavDropdown title="Sermons" id="collasible-nav-dropdown">
-              <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
+              <NavDropdown.Item href="/sundaymorningrecordings">Sunday morning</NavDropdown.Item>
             </NavDropdown>
             <Nav.Link id="navLink" href="/contact">Contact</Nav.Link>
           </Nav>
