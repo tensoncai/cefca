@@ -12,9 +12,9 @@ class NavBar extends Component {
 
   render() {
     return (
-      <Navbar className="navbar" collapseOnSelect expand="lg" variant="dark">
+      <Navbar className="navbar" collapseOnSelect expand="sm" variant="dark">
         <Navbar.Brand id="navBrand" href="/">CEFCA</Navbar.Brand>
-        <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+        <Navbar.Toggle id="navBarToggle" aria-controls="responsive-navbar-nav" />
         <Navbar.Collapse id="responsive-navbar-nav">
           <Nav className="ml-auto">
             <NavDropdown title="About" id="collasible-nav-dropdown">

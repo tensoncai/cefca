@@ -8,16 +8,18 @@ class Home extends Component {
   
   render() {
     return (
-      <div>
+      <div className="pageContainer">
         <NavBar />
-        <div className="mainImageText">
-          <p className="welcomeText">
-            Welcome to
-            <br></br>
-            Chinese Evangelical
-            <br></br>
-            Free Church of Ames
-          </p>
+        <div className="contentWrap">
+          <div className="mainImageText">
+            <p className="welcomeText">
+              Welcome to
+              <br></br>
+              Chinese Evangelical
+              <br></br>
+              Free Church of Ames
+            </p>
+          </div>
         </div>
         <Footer />
       </div>
