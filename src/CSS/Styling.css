@@ -9,11 +9,11 @@
 
 .navbar {
   height: 80px;
-  background-color: white;
+  /* background-color: #0072ff; */
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
   font-family: Arial, Helvetica, sans-serif;
   font-size: 20px;
-  /* background-image: linear-gradient(15deg, #0072ff 0%, #00c6ff 100%); */
+  background-image: linear-gradient(15deg, #021B79 0%, #0575E6 100%);
 }
 
 .ml-auto {
@@ -25,12 +25,13 @@
 }
 
 #collasible-nav-dropdown {
-  color: #0072ff;
+  /* color: #0072ff; */
+  color: white;
   margin: 5px;
 }
 
 #navLink {
-  color: #0072ff;
+  color: white;
   margin: 5px;
 }
 
@@ -38,12 +39,23 @@
   font-family: 'Istok Web', sans-serif;
   font-size: 52px;
   margin-left: 20px;
-  color: #0072ff;
+  color: white;
+  /* color: #0072ff; */
 }
 
 #collasible-nav-dropdown::after {
   content: none;
   padding: 0px 0px;
+}
+
+.dropzone {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  width: 100%;
+  height: 300px;
+  border: 2px dashed #0072ff;
 }
 
 .mainImageText {
