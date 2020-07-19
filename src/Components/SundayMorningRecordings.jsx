@@ -223,6 +223,7 @@ class SundayMorningRecordings extends Component {
             handleClose={this.handleClose} 
             onUpload={this.onUploadClicked}
             loadingProps={this.state.loadingFiles}
+            
           />
           
           
