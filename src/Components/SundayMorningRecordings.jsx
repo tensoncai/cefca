@@ -27,14 +27,14 @@ class SundayMorningRecordings extends Component {
       selectedFiles: [],
       byteBuffers: [],
       showModal: false,
-      isLoading: false,
-      showUploadButton: false
+      showUploadButton: false,
+      loadingFiles: {}
     }
 
     this.onDrop = this.onDrop.bind(this);
     this.handleShow = this.handleShow.bind(this);
     this.handleClose = this.handleClose.bind(this);
-    this.onDeleteDropFile = this.onDeleteDropFile.bind(this);
+    this.deleteFileFromDropzone = this.deleteFileFromDropzone.bind(this);
     this.onUploadClicked = this.onUploadClicked.bind(this);
     this.uploadToS3 = this.uploadToS3.bind(this);
     this.uploadToDynamoDb = this.uploadToDynamoDb.bind(this);
@@ -51,7 +51,7 @@ class SundayMorningRecordings extends Component {
 
   onDrop = (fileList) => {
     var selectedFiles = this.state.selectedFiles;
-
+    // check if newly dropped files are duplicates of current selected files
     for (var i = 0; i < fileList.length; i++) {
       var fileExists = false;
       var curFile = fileList[i];
@@ -71,34 +71,56 @@ class SundayMorningRecordings extends Component {
     this.setState({
       selectedFiles: selectedFiles,
       showUploadButton: true
-    }, () => console.log(this.state.selectedFiles));
+    });
+
+    // set loading properties to each selected file
+    var obj = {};
+    for (var index = 0; index < selectedFiles.length; index++) {
+      var fileName = selectedFiles[index].name;
+      obj[fileName] = false;
+    }
+
+    this.setState({
+      loadingFiles: obj
+    });
   }
 
-  onDeleteDropFile = (fileName) => {
-    console.log("delete clicked");
+  deleteFileFromDropzone = (fileName) => {
+    // delete file from selectedFiles
     this.setState(prevState => ({
       selectedFiles: prevState.selectedFiles.filter(file => file.name !== fileName )
-    }), () => console.log(this.state.selectedFiles));
+    }));
+
+    // delete file loading property from loadingFiles
+    var obj = this.state.loadingFiles;
+    delete obj[fileName];
+    this.setState({
+      loadingFiles: obj
+    });
   }
 
   uploadToS3 = async () => {
+    var obj = this.state.loadingFiles;
+    
     for (var i = 0; i < this.state.selectedFiles.length; i++) {
       var file = this.state.selectedFiles[i];
       var name = this.state.selectedFiles[i].name;
 
+      // set loading property for the uploading file to true
+      obj[name] = true;
       this.setState({
-        isLoading: true
+        loadingFiles: obj
       });
 
+      // upload the file
       S3Client.uploadFile(file, name)
       .then((data) => {
         console.log(data);
-        this.setState({
-          isLoading: false
-        })
+        // set the loading property for the file that finished uploading to false
+
       })
       .catch(err => console.error(err))
-      console.log('s3 upload file ' + i);
+      // console.log('s3 upload file ' + i);
     }
   }
 
@@ -131,7 +153,6 @@ class SundayMorningRecordings extends Component {
   }
 
   uploadToDynamoDb = async () => {
-
     var selectedFiles = this.state.selectedFiles;
     for (var i = 0; i < selectedFiles.length; i++) {
       const requestOptions = {
@@ -149,40 +170,13 @@ class SundayMorningRecordings extends Component {
     }
   }
 
-  // uploadToS3 = async (key, byteBuffer) => {
-  //   // uploads .m4a audio file to S3 bucket
-  //   const requestOptions = {
-  //     method: 'POST',
-  //     mode: 'cors',
-  //     cache: 'no-cache',
-  //     credentials: 'same-origin',
-  //     headers: { 'Content-Type': 'application/json' },
-  //     body: JSON.stringify({ key: key, byteBuffer: byteBuffer })
-  //   };
-
-  //   // const response = await fetch(S3_URL, requestOptions);
-  //   // const jsonResponse = await response.json();
-  // }
-
-  // onFileChange = (e) => {
-  //   var fileList = e.target.files;
-  //   var files = [];
-  //   for (var i = 0; i < fileList.length; i++) {
-  //     files.push(fileList[i]);
-  //   }
-
-  //   this.setState(prevState => ({
-  //     selectedFiles: [...prevState.selectedFiles, files]
-  //   }), () => console.log(this.state.selectedFiles));
-  // }
-
   onDeleteClicked = () => {
     this.deleteRecord();
   }
 
   displayFiles = () => {
     if (this.state.selectedFiles.length === 0) {
-      return 'No recordings'
+      return 'No audio recordings available'
     }
     else {
       console.log(this.state.selectedFiles);
@@ -206,7 +200,8 @@ class SundayMorningRecordings extends Component {
   handleClose = () => {
     this.setState({
       showModal: false,
-      selectedFiles: []
+      selectedFiles: [],
+      loadingFiles: {}
     });
   }
 
@@ -216,18 +211,18 @@ class SundayMorningRecordings extends Component {
         <NavBar />
         <div  className="contentWrap">
 
-          <Button variant="primary" onClick={this.handleShow}>
+          <Button disabled={true} variant="primary" onClick={this.handleShow}>
             Launch Modal
           </Button>
           
           <DropzoneUpload
             selectedFiles={this.state.selectedFiles} 
-            onDelete={this.onDeleteDropFile} 
+            onDelete={this.deleteFileFromDropzone} 
             onDrop={this.onDrop}
             show={this.state.showModal} 
             handleClose={this.handleClose} 
             onUpload={this.onUploadClicked}
-            isLoading={this.state.isLoading}
+            loadingProps={this.state.loadingFiles}
           />
           
           

@@ -30,7 +30,7 @@ class DropzoneUpload extends Component {
           {this.props.selectedFiles.length > 0 && this.props.selectedFiles.map(file => (
             <li key={file.name} className="list-group-item" style={{width: '100%', textAlign: 'left'}}>
               {file.name}
-              {this.props.isLoading ?
+              {this.props.loadingProps[file.name] ?
                 <Spinner style={{float: 'right'}} animation="border" variant="primary" /> 
                 :
                 <Button style={{background: 'none', border: 'none', color: 'black', float: 'right'}} 
