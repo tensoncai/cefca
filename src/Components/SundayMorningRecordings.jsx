@@ -7,7 +7,7 @@ import S3 from 'aws-s3';
 import DropzoneUpload from "./DropzoneUpload";
 
 const DYNAMODB_URL = process.env.REACT_APP_DYNAMODB_URL;
-const S3_AUDIO_PATH = process.env.REACT_APP_S3_AUDIO_PATH;
+// const S3_AUDIO_PATH = process.env.REACT_APP_S3_AUDIO_PATH;
 
 const config = {
   bucketName: process.env.REACT_APP_BUCKET_NAME,
@@ -17,7 +17,15 @@ const config = {
 }
 
 // console.log(process.env.REACT_APP_ACCESS_KEY_ID);
-
+/**
+ * dropFileStatusProps object
+ * dropFileStatusProps: {
+ *      filename1: 0 means show trashcan
+ *                 1 means show loading spinner
+ *                 2 means show checkmark (successfully uploaded)
+ *                 3 means show x mark (the file was not successfully uploaded)
+ *  }
+ */
 const S3Client = new S3(config);
 
 class SundayMorningRecordings extends Component {
@@ -28,7 +36,7 @@ class SundayMorningRecordings extends Component {
       byteBuffers: [],
       showModal: false,
       showUploadButton: false,
-      loadingFiles: {}
+      dropFileStatusProps: {}
     }
 
     this.onDrop = this.onDrop.bind(this);
@@ -73,15 +81,15 @@ class SundayMorningRecordings extends Component {
       showUploadButton: true
     });
 
-    // set loading properties to each selected file
+    // set the loading property for each selected file
     var obj = {};
     for (var index = 0; index < selectedFiles.length; index++) {
       var fileName = selectedFiles[index].name;
-      obj[fileName] = false;
+      obj[fileName] = 0;
     }
 
     this.setState({
-      loadingFiles: obj
+      dropFileStatusProps: obj
     });
   }
 
@@ -91,36 +99,45 @@ class SundayMorningRecordings extends Component {
       selectedFiles: prevState.selectedFiles.filter(file => file.name !== fileName )
     }));
 
-    // delete file loading property from loadingFiles
-    var obj = this.state.loadingFiles;
+    // delete file loading property from dropFileStatusProps
+    var obj = this.state.dropFileStatusProps;
     delete obj[fileName];
     this.setState({
-      loadingFiles: obj
+      dropFileStatusProps: obj
     });
   }
 
   uploadToS3 = async () => {
-    var obj = this.state.loadingFiles;
+    var obj = this.state.dropFileStatusProps;
     
     for (var i = 0; i < this.state.selectedFiles.length; i++) {
       var file = this.state.selectedFiles[i];
       var name = this.state.selectedFiles[i].name;
 
-      // set loading property for the uploading file to true
-      obj[name] = true;
+      // set status for the uploading file to 1 (which means to show the loading spinner)
+      obj[name] = 1;
       this.setState({
-        loadingFiles: obj
+        dropFileStatusProps: obj
       });
 
       // upload the file
       S3Client.uploadFile(file, name)
       .then((data) => {
-        console.log(data);
-        // set the loading property for the file that finished uploading to false
+        var key = data.key;
+        var name = key.substring(0, key.length - 6); // s3client adds '.x-m4a' to the end
+        console.log('key = ' + key);
+        console.log('name = ' + name);
+
+        var obj = this.state.dropFileStatusProps;
+        obj[name] = 2; // file was uploaded successfully, display the checkmark
+        this.setState({
+          dropFileStatusProps: obj
+        }, () => console.log(this.state.dropFileStatusProps));
+      })
+      .catch(err => {
+        var obj = this.state.dropFileStatusProps;
 
       })
-      .catch(err => console.error(err))
-      // console.log('s3 upload file ' + i);
     }
   }
 
@@ -201,7 +218,7 @@ class SundayMorningRecordings extends Component {
     this.setState({
       showModal: false,
       selectedFiles: [],
-      loadingFiles: {}
+      dropFileStatusProps: {}
     });
   }
 
@@ -222,8 +239,8 @@ class SundayMorningRecordings extends Component {
             show={this.state.showModal} 
             handleClose={this.handleClose} 
             onUpload={this.onUploadClicked}
-            loadingProps={this.state.loadingFiles}
-            
+            dropFileStatusProps={this.state.dropFileStatusProps}
+
           />
           
           

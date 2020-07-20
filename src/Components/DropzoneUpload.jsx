@@ -3,6 +3,8 @@ import "../CSS/Styling.css";
 import Dropzone from 'react-dropzone';
 import { Modal, Button } from 'react-bootstrap';
 import Spinner from 'react-bootstrap/Spinner';
+import DeleteIcon from '@material-ui/icons/Delete';
+import CheckCircleOutlineRoundedIcon from '@material-ui/icons/CheckCircleOutlineRounded';
 
 class DropzoneUpload extends Component {
   // constructor(props) {
@@ -12,14 +14,28 @@ class DropzoneUpload extends Component {
   onDelete = (fileName) => {
     this.props.onDelete(fileName);
   }
+
+  displayFiles = (fileName) => {
+    if (this.props.dropFileStatusProps[fileName] === 0) {
+      return <DeleteIcon style={{float: 'right', color: 'red', fontSize: '28px'}} onClick={this.onDelete.bind(this, fileName)}/>
+    }
+
+    if (this.props.dropFileStatusProps[fileName] === 1) {
+      return <Spinner style={{float: 'right', color: '#0072ff'}} animation="border" />
+    }
+
+    if (this.props.dropFileStatusProps[fileName] === 2) {
+      return <CheckCircleOutlineRoundedIcon style={{float: 'right', color: '#00c400', fontSize: '28px'}} />
+    }
+  }
   
   render() {
     return (
-      <Modal size="lg" show={this.props.show} onHide={this.props.handleClose}>
-        <Dropzone className="dropContainer" accept="" onDrop={this.props.onDrop} multiple>
+      <Modal size='lg' backdrop='static' show={this.props.show} onHide={this.props.handleClose}>
+        <Dropzone className='dropContainer' accept='' onDrop={this.props.onDrop} multiple>
           {({getRootProps, getInputProps}) => (
           <section>
-            <div {...getRootProps()} className="dropzone">
+            <div {...getRootProps()} className='dropzone'>
               <input {...getInputProps()}/>
               <p style={{fontSize: '20px'}}>Drop some files here, or click to select files</p>
             </div>
@@ -29,15 +45,10 @@ class DropzoneUpload extends Component {
         <div style={{width: '100%'}} className="dropList">
           {this.props.selectedFiles.length > 0 && this.props.selectedFiles.map(file => (
             <li key={file.name} className="list-group-item" style={{width: '100%', textAlign: 'left'}}>
-              {file.name}
-              {this.props.loadingProps[file.name] ?
-                <Spinner style={{float: 'right'}} animation="border" variant="primary" /> 
-                :
-                <Button style={{background: 'none', border: 'none', color: 'black', float: 'right'}} 
-                      onClick={this.onDelete.bind(this, file.name)}>
-                  Delete
-                </Button>
-              }
+              <div style={{fontSize: '18px', fontWeight: 'bold'}}>
+                {file.name}
+                {this.displayFiles(file.name)}
+              </div>
             </li>
           ))}
         </div>
