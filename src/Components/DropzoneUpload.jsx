@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import "../CSS/Styling.css";
 import Dropzone from 'react-dropzone';
-import { Modal, Button } from 'react-bootstrap';
+import { Modal, Button, Form} from 'react-bootstrap';
 import Spinner from 'react-bootstrap/Spinner';
 import DeleteIcon from '@material-ui/icons/Delete';
 import CheckCircleOutlineRoundedIcon from '@material-ui/icons/CheckCircleOutlineRounded';
@@ -17,7 +17,7 @@ class DropzoneUpload extends Component {
 
   displayFiles = (fileName) => {
     if (this.props.dropFileStatusProps[fileName] === 0) {
-      return <DeleteIcon style={{float: 'right', color: 'red', fontSize: '28px'}} onClick={this.onDelete.bind(this, fileName)}/>
+      return <DeleteIcon style={{float: 'right', color: 'red', fontSize: '28px'}} onClick={this.onDelete.bind(this, fileName)} />
     }
 
     if (this.props.dropFileStatusProps[fileName] === 1) {
@@ -31,7 +31,7 @@ class DropzoneUpload extends Component {
   
   render() {
     return (
-      <Modal size='lg' backdrop='static' show={this.props.show} onHide={this.props.handleClose}>
+      <Modal size='lg' backdrop='static' show={this.props.show} onHide={this.props.handleClose}>        
         <Dropzone className='dropContainer' accept='' onDrop={this.props.onDrop} multiple>
           {({getRootProps, getInputProps}) => (
           <section>
@@ -53,10 +53,17 @@ class DropzoneUpload extends Component {
           ))}
         </div>
         <Modal.Footer style={{border: 'none'}}>
-          <Button className="mr-auto" variant="danger" onClick={this.props.handleClose}>
+          <Button className="mr-auto" variant="outline-danger" onClick={this.props.handleClose}>
             Cancel
           </Button>
-          <Button variant="primary" disabled={this.props.selectedFiles.length === 0} onClick={this.props.onUpload}>
+          {this.props.uploadingError ? 
+            <div style={{color: 'red', textAlign: 'center'}}>
+              An error occurred. At least one file did not upload correctly.
+            </div>
+            :
+            ''
+          }
+          <Button variant="outline-primary" disabled={this.props.selectedFiles.length === 0} onClick={this.props.onUpload}>
             Upload
           </Button>
         </Modal.Footer>

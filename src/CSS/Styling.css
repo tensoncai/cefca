@@ -58,6 +58,16 @@
   border: 2px dashed #0072ff;
 }
 
+.passwordModal {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  width: 100%;
+  height: 300px;
+  border: 2px dashed #0072ff;
+}
+
 .mainImageText {
   background-size: cover;
   overflow: hidden;
