@@ -7,7 +7,6 @@ import S3 from 'aws-s3';
 import DropzoneUpload from "./DropzoneUpload";
 import PasswordModal from "./PasswordModal";
 import EditRoundedIcon from '@material-ui/icons/EditRounded';
-import EditPage from "./EditPage";
 import {Route, Link} from 'react-router-dom';
 
 const DYNAMODB_URL = process.env.REACT_APP_DYNAMODB_URL;
@@ -150,10 +149,10 @@ class SundayMorningRecordings extends Component {
   }
 
   componentDidMount = () => {
-    this.fetchAllAudioRecords();
+    this.fetchAllFromDynamoDb();
   }
 
-  deleteRecord = async () => {
+  deleteFromDynamoDb = async () => {
     const requestOptions = {
       method: 'DELETE',
       mode: 'cors',
@@ -168,7 +167,7 @@ class SundayMorningRecordings extends Component {
     console.log(jsonResponse);
   }
 
-  fetchAllAudioRecords = async () => {
+  fetchAllFromDynamoDb = async () => {
     const response = await fetch(DYNAMODB_URL);
     const jsonResponse = await response.json();
     console.log(jsonResponse);
@@ -197,7 +196,7 @@ class SundayMorningRecordings extends Component {
   }
 
   onDeleteClicked = () => {
-    this.deleteRecord();
+    this.deleteFromDynamoDb();
   }
 
   displayAudioRecords = () => {
@@ -232,15 +231,6 @@ class SundayMorningRecordings extends Component {
     });
   }
 
-  goToEditPage = () => {
-    // this.setState({
-    //   editIconClicked: true
-    // });
-    // window.location.href = '/editpage';
-
-    return <Route exact path="/editpage" render={(props) => <EditPage {...props} audioFiles={this.state.storedAudioRecords} />} />
-  }
-
   editButtonStyle = {
     display: 'block', 
     borderRadius: '100%', 
@@ -259,12 +249,18 @@ class SundayMorningRecordings extends Component {
       <div className="pageContainer">
         <NavBar />
         <div className="contentWrap">
-          <Link to="/editpage">
-            <Button style={this.editButtonStyle} disabled={true} variant="primary" onClick={this.goToEditPage}>
+          <Link
+            to={{
+              pathname: "/editpage", 
+              state: {
+                storedAudioRecords: this.state.storedAudioRecords,
+                onDelete: this.on
+              }
+          }}>
+            <Button style={this.editButtonStyle} disabled={false} variant="primary">
               <EditRoundedIcon style={{fontSize: '20px', color: 'blue'}} />
             </Button>
           </Link>
-          <Route exact path="/editpage" render={(props) => <EditPage {...props} audioFiles={this.state.storedAudioRecords} />} />
           {/* <DropzoneUpload
             selectedFiles={this.state.selectedFiles} 
             onDelete={this.deleteFileFromDropzone} 

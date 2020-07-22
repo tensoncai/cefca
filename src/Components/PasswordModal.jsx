@@ -23,6 +23,7 @@ class PasswordModal extends Component {
   }
 
   validatePass = () => {
+    console.log('go clicked');
     if (this.state.inputPass === password) {
       this.setState({
         passIsValid: true
@@ -52,7 +53,7 @@ class PasswordModal extends Component {
             <Form.Control onChange={this.handleChange} style={{verticalAlign: 'middle'}} type="password" placeholder="Enter password" />
             <Button disabled={this.state.inputPass.length === 0} variant="outline-primary" onClick={this.validatePass}>Go</Button>
           </div>
-          <Route exact path="/sundaymorningrecordings" render={(props) => <SundayMorningRecordings {...props} />} />
+          {/* <Route exact path="/sundaymorningrecordings" render={(props) => <SundayMorningRecordings {...props} />} /> */}
 
           {/* <div style={{display: 'flex', justifyContent: 'center', color: 'red'}}>
             {this.state.passIsValid ? '' : 'Wrong password'}
