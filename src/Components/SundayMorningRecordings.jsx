@@ -35,22 +35,17 @@ class SundayMorningRecordings extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      // selectedFiles: [],
-      // showModal: false,
-      // showUploadButton: false,
-      // dropFileStatusProps: {},
-      // uploadingError: false,
-      // storedAudioRecords: [],
+      storedAudioRecords: [],
       editIconClicked: false,
     }
 
-    this.onDrop                 = this.onDrop.bind(this);
-    this.handleShow             = this.handleShow.bind(this);
-    this.handleClose            = this.handleClose.bind(this);
-    this.deleteFileFromDropzone = this.deleteFileFromDropzone.bind(this);
-    this.onUploadClicked        = this.onUploadClicked.bind(this);
-    this.uploadToS3             = this.uploadToS3.bind(this);
-    this.uploadToDynamoDb       = this.uploadToDynamoDb.bind(this);
+    // this.onDrop                 = this.onDrop.bind(this);
+    // this.handleShow             = this.handleShow.bind(this);
+    // this.handleClose            = this.handleClose.bind(this);
+    // this.deleteFileFromDropzone = this.deleteFileFromDropzone.bind(this);
+    // this.onUploadClicked        = this.onUploadClicked.bind(this);
+    // this.uploadToS3             = this.uploadToS3.bind(this);
+    // this.uploadToDynamoDb       = this.uploadToDynamoDb.bind(this);
   }
 
   // onUploadClicked = () => {
@@ -167,10 +162,10 @@ class SundayMorningRecordings extends Component {
   // }
 
   fetchAllFromDynamoDb = async () => {
+    console.log('fetch from dynamo db');
     const response = await fetch(DYNAMODB_URL);
     const jsonResponse = await response.json();
     console.log(jsonResponse);
-    console.log('here');
     this.setState({
       storedAudioRecords: jsonResponse.Items
     }, () => console.log(this.state.storedAudioRecords));
@@ -199,36 +194,23 @@ class SundayMorningRecordings extends Component {
   // }
 
   displayAudioRecords = () => {
-    if (this.state.storedAudioRecords.length === 0) {
+    var audioRecords = this.state.storedAudioRecords;
+    if (audioRecords.length === 0) {
       return 'No audio recordings available'
     }
     else {
-      console.log(this.state.selectedFiles);
-      var fileHtmlElements = this.state.selectedFiles.map((file) => 
-        <div style={{paddingLeft: '30px', marginBottom: '30px'}}>
-          <h5>{file.name}</h5>
-          <audio style={{width: '50%', backgroundColor: 'blue'}} title={file.name} controls key={file.name} src={S3_AUDIO_PATH + file.name} type="audio/mpeg"/>
+      return audioRecords.map((file) => 
+        <div key={file.name} style={{paddingLeft: '30px', marginTop: '30px', marginBottom: '100px'}}>
+          <div>
+            <h5>{file.name}</h5>
+          </div>
+          <div>
+            <audio style={{float: 'left', width: '50%'}} title={file.name} controls key={file.name} src={S3_AUDIO_PATH + file.name} type="audio/mpeg"/>
+          </div>
         </div>
       );
-
-      return fileHtmlElements;
     }
   }
-
-  // handleShow = () => {
-  //   this.setState({
-  //     showModal: true
-  //   });
-  // }
-
-  // handleClose = () => {
-  //   this.setState({
-  //     showModal: false,
-  //     selectedFiles: [],
-  //     dropFileStatusProps: {},
-  //     uploadingError: false
-  //   });
-  // }
 
   editButtonStyle = {
     display: 'block', 
@@ -252,33 +234,14 @@ class SundayMorningRecordings extends Component {
             to={{
               pathname: "/editpage", 
               state: {
-                storedAudioRecords: this.state.storedAudioRecords,
-                onDelete: this.on
+                storedAudioRecords: this.state.storedAudioRecords
               }
           }}>
             <Button style={this.editButtonStyle} disabled={false} variant="primary">
               <EditRoundedIcon style={{fontSize: '20px', color: 'blue'}} />
             </Button>
           </Link>
-          {/* <DropzoneUpload
-            selectedFiles={this.state.selectedFiles} 
-            onDelete={this.deleteFileFromDropzone} 
-            onDrop={this.onDrop}
-            show={this.state.showModal} 
-            handleClose={this.handleClose} 
-            onUpload={this.onUploadClicked}
-            dropFileStatusProps={this.state.dropFileStatusProps}
-            uploadingError={this.state.uploadingError}
-          /> */}
-          
-          {/* <input type="file" id="recording" accept=".m4a" onChange={this.onFileChange} multiple/> */}
-          {/* <Button onClick={this.onUploadClicked}>Upload</Button> */}
-         
-          {/* {this.displayAudioRecords()} */}
-          {/* <audio style={{width: '50%'}} title='6-28-2020主日学：罗马书.m4a.x-m4a' controls key='6-28-2020主日学：罗马书.m4a.x-m4a' src={S3_AUDIO_PATH + '6-28-2020主日学：罗马书.m4a.x-m4a'} type="audio/mpeg"/> */}
-
-
-          {/* <Button onClick={this.onDeleteClicked}>Delete</Button> */}
+          {this.displayAudioRecords()}
         </div>
         <Footer />
       </div>

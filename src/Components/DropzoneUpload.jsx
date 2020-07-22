@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import "../CSS/Styling.css";
 import Dropzone from 'react-dropzone';
-import { Modal, Button, Form} from 'react-bootstrap';
+import { Modal, Button} from 'react-bootstrap';
 import Spinner from 'react-bootstrap/Spinner';
 import DeleteIcon from '@material-ui/icons/Delete';
 import CheckCircleOutlineRoundedIcon from '@material-ui/icons/CheckCircleOutlineRounded';

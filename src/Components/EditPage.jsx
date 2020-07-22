@@ -2,16 +2,20 @@ import React, { Component } from "react";
 import NavBar from "./NavBar";
 import Footer from "./Footer";
 import "../CSS/Styling.css";
-import PasswordModal from "./PasswordModal";
+// import PasswordModal from "./PasswordModal";
 import DropzoneUpload from "./DropzoneUpload";
 import DeleteIcon from '@material-ui/icons/Delete';
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 import IconButton from '@material-ui/core/IconButton';
+import Button from '@material-ui/core/Button';
+// import SaveIcon from '@material-ui/icons/Save';
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+
 import S3 from 'aws-s3';
 
 const DYNAMODB_URL = process.env.REACT_APP_DYNAMODB_URL;
 const S3_AUDIO_PATH = process.env.REACT_APP_S3_AUDIO_PATH;
-const password = process.env.REACT_APP_PASSWORD_MODAL;
+// const password = process.env.REACT_APP_PASSWORD_MODAL;
 
 const config = {
   bucketName: process.env.REACT_APP_BUCKET_NAME,
@@ -39,12 +43,21 @@ class EditPage extends Component {
     this.state = {
       showPasswordModal: true,
       selectedFiles: [],
-      showModal: false,
+      showDropzoneModal: false,
       showUploadButton: false,
       dropFileStatusProps: {},
       uploadingError: false,
       storedAudioRecords: [],
     }
+
+    this.onDrop                 = this.onDrop.bind(this);
+    this.dropzoneModalOpen      = this.dropzoneModalOpen.bind(this);
+    this.dropzoneModalClose     = this.dropzoneModalClose.bind(this);
+    this.deleteFileFromDropzone = this.deleteFileFromDropzone.bind(this);
+    this.onUploadClicked        = this.onUploadClicked.bind(this);
+    this.uploadToS3             = this.uploadToS3.bind(this);
+    this.uploadToDynamoDb       = this.uploadToDynamoDb.bind(this);
+    this.onDeleteClicked        = this.onDeleteClicked.bind(this);
   }
 
   /**
@@ -113,13 +126,13 @@ class EditPage extends Component {
 
   dropzoneModalOpen = () => {
     this.setState({
-      showModal: true
+      showDropzoneModal: true
     });
   }
 
   dropzoneModalClose = () => {
     this.setState({
-      showModal: false,
+      showDropzoneModal: false,
       selectedFiles: [],
       dropFileStatusProps: {},
       uploadingError: false
@@ -147,25 +160,30 @@ class EditPage extends Component {
 
       // upload the file
       S3Client.uploadFile(file, name)
-      .then((data) => {
-        var key = data.key;
-        var name = key.substring(0, key.length - 6); // s3client adds '.x-m4a' to the end
-        console.log('key = ' + key);
-        console.log('name = ' + name);
-
-        var obj = this.state.dropFileStatusProps;
-        obj[name] = 2; // the file was uploaded successfully, set a 2 to display the checkmark
-        this.setState({
-          dropFileStatusProps: obj
-        }, () => console.log(this.state.dropFileStatusProps));
-      })
-      .catch(err => {
-        this.setState({
-          uploadingError: true
-        }, () => console.log(err));
-      })
+        .then((data) => {
+          var key = data.key;
+          var name = key.substring(0, key.length - 6); // s3client adds '.x-m4a' to the end
+          var obj = this.state.dropFileStatusProps;
+          obj[name] = 2; // the file was uploaded successfully, set a 2 to display the checkmark
+          this.setState({
+            dropFileStatusProps: obj
+          }, () => console.log(this.state.dropFileStatusProps));
+        })
+        .catch(err => {
+          this.setState({
+            uploadingError: true
+          }, () => console.log(err));
+        })
     }
   }
+
+  deleteFromS3 = (filename) => {
+    console.log('delete from s3');
+    S3Client
+      .deleteFile(filename)
+      .then(response => console.log(response))
+      .catch(err => console.error(err))
+  };
 
   /**
    * --------------------------------------------------------------
@@ -191,14 +209,15 @@ class EditPage extends Component {
     }
   }
 
-  deleteFromDynamoDb = async () => {
+  deleteFromDynamoDb = async (filename) => {
+    console.log('delete from dynamo db');
     const requestOptions = {
       method: 'DELETE',
       mode: 'cors',
       cache: 'no-cache',
       credentials: 'same-origin',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name: 'react fetch test' })
+      body: JSON.stringify({ name: filename })
     };
 
     const response = await fetch(DYNAMODB_URL, requestOptions);
@@ -206,8 +225,11 @@ class EditPage extends Component {
     console.log(jsonResponse);
   }
 
-  onDeleteClicked = () => {
-    this.deleteFromDynamoDb();
+  onDeleteClicked = (filename) => {
+    console.log('on delete clicked');
+    console.log(filename)
+    this.deleteFromDynamoDb(filename);
+    this.deleteFromS3(filename);
   }
 
   /**
@@ -228,10 +250,6 @@ class EditPage extends Component {
     });
   }
 
-  onDelete = () => {
-    // clicking the trashcan
-  }
-
   /**
    * --------------------------------------------------------------
    * ComponentDidMount, displaying audio files
@@ -250,49 +268,83 @@ class EditPage extends Component {
     }
     else {
       return audioRecords.map((file) => 
-        <div style={{paddingLeft: '30px', marginTop: '30px', marginBottom: '100px'}}>
+        <div key={file.name} style={{paddingLeft: '30px', marginTop: '30px', marginBottom: '100px'}}>
           <div>
             <h5>{file.name}</h5>
           </div>
           <div>
             <audio style={{float: 'left', width: '50%'}} title={file.name} controls key={file.name} src={S3_AUDIO_PATH + file.name} type="audio/mpeg"/>
-            <DeleteIcon onClick={this.onDelete} style={{float: 'left', marginLeft: '40px', marginTop: '5px', color: 'red', fontSize: '28px'}} />
+            <IconButton onClick={this.onDeleteClicked.bind(this, file.name)} style={{float: 'left', borderRadius: '50%', width: '45px', height: '45px', marginLeft: '45px'}}>
+              <DeleteIcon style={{ color: 'red', fontSize: '28px'}} />
+            </IconButton>
           </div>
         </div>
       );
     }
   }
 
+  onExit = () => {
+    window.location.href = '/sundaymorningrecordings';
+  }
+
+  cloudUploadIconStyle = {
+    // marginRight: '15px',
+    float: 'right', 
+    color: 'blue',
+    fontSize: '23px'
+  }
+
+  exitIconStyle = {
+    // marginRight: '0px',
+    float: 'right',
+    color: 'green',
+    fontSize: '23px'
+  }
+
   render() {
     return (
       <div className="pageContainer">
-      <NavBar />
-      <div className="contentWrap">
-        <div style={{marginRight: '60px', marginBottom: '30px'}}>
-          <IconButton style={{float: 'right'}}>
-            <CloudUploadIcon onClick={this.showDropzone} style={{float: 'right', color: 'blue'}} />
-          </IconButton>
-        </div>
+        <NavBar />
+        <div className="contentWrap">
+          <div className="btn-group-vertical" style={{marginRight: '60px', marginBottom: '30px', float: 'right'}}>
+            <Button
+              onClick={this.dropzoneModalOpen}
+              variant='contained'
+              style={{backgroundColor: 'white', color: 'blue', float: 'right', fontSize: '15px', boxShadow: 'none', marginBottom: '30px'}}
+              startIcon={<CloudUploadIcon style={this.cloudUploadIconStyle} />}
+            >
+              Upload
+            </Button>
+            <Button
+              onClick={this.onExit}
+              variant='contained'
+              style={{backgroundColor: 'white', color: 'green', float: 'right', fontSize: '15px', boxShadow: 'none', marginBottom: '30px', paddingRight: '20px'}}
+              startIcon={<ExitToAppIcon style={this.exitIconStyle} />}
+            >
+              Exit
+            </Button>
+          </div>
+          
 
-        {/* <PasswordModal
-          show={this.state.showPasswordModal} 
-          handleClose={this.passwordModalClose}
-        /> */}
-        <div>
-          {this.displayAudioRecords()}
+          {/* <PasswordModal
+            show={this.state.showPasswordModal} 
+            handleClose={this.passwordModalClose}
+          /> */}
+          <div>
+            {this.displayAudioRecords()}
+          </div>
+          <DropzoneUpload
+            selectedFiles={this.state.selectedFiles} 
+            onDelete={this.deleteFileFromDropzone} 
+            onDrop={this.onDrop}
+            show={this.state.showDropzoneModal} 
+            handleClose={this.dropzoneModalClose} 
+            onUpload={this.onUploadClicked}
+            dropFileStatusProps={this.state.dropFileStatusProps}
+            uploadingError={this.state.uploadingError}
+          />
         </div>
-        <DropzoneUpload
-          selectedFiles={this.state.selectedFiles} 
-          onDelete={this.deleteFileFromDropzone} 
-          onDrop={this.onDrop}
-          show={this.state.showModal} 
-          handleClose={this.handleClose} 
-          onUpload={this.onUploadClicked}
-          dropFileStatusProps={this.state.dropFileStatusProps}
-          uploadingError={this.state.uploadingError}
-        />
-      </div>
-      <Footer />
+        <Footer />
       </div>
     )
   }
