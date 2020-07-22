@@ -9,11 +9,11 @@
 
 .navbar {
   height: 80px;
-  /* background-color: #0072ff; */
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  background-color: #0072ff;
+  /* box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); */
   font-family: Arial, Helvetica, sans-serif;
   font-size: 20px;
-  background-image: linear-gradient(15deg, #021B79 0%, #0575E6 100%);
+  /* background-image: linear-gradient(15deg, #021B79 0%, #0575E6 100%); */
 }
 
 .ml-auto {

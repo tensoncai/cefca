@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import NavBar from "./NavBar";
 import Footer from "./Footer";
 import "../CSS/Styling.css";
+import ButtonGroup from 'react-bootstrap/ButtonGroup'
 // import PasswordModal from "./PasswordModal";
 import DropzoneUpload from "./DropzoneUpload";
 import DeleteIcon from '@material-ui/icons/Delete';
@@ -226,10 +227,12 @@ class EditPage extends Component {
   }
 
   onDeleteClicked = (filename) => {
-    console.log('on delete clicked');
-    console.log(filename)
     this.deleteFromDynamoDb(filename);
     this.deleteFromS3(filename);
+    console.log('delete clicked');
+    this.setState(prevState => ({
+      storedAudioRecords: prevState.storedAudioRecords.filter(file => file.name !== filename )
+    }), console.log(this.state.storedAudioRecords));
   }
 
   /**
@@ -257,23 +260,25 @@ class EditPage extends Component {
    */
 
   componentDidMount = () => {
-    this.displayAudioRecords();
+    this.setState({
+      storedAudioRecords: this.props.location.state.storedAudioRecords
+    }, this.displayAudioRecords)
   }
   
   displayAudioRecords = () => {
-    var audioRecords = this.props.location.state.storedAudioRecords;
+    var audioRecords = this.state.storedAudioRecords;
     console.log(audioRecords);
     if (audioRecords.length === 0) {
       return 'No audio recordings available'
     }
     else {
       return audioRecords.map((file) => 
-        <div key={file.name} style={{paddingLeft: '30px', marginTop: '30px', marginBottom: '100px'}}>
+        <div key={file.name} style={{paddingLeft: '30px', marginTop: '30px', marginBottom: '100px', width: '80%'}}>
           <div>
             <h5>{file.name}</h5>
           </div>
           <div>
-            <audio style={{float: 'left', width: '50%'}} title={file.name} controls key={file.name} src={S3_AUDIO_PATH + file.name} type="audio/mpeg"/>
+            <audio style={{float: 'left', width: '75%'}} title={file.name} controls key={file.name} src={S3_AUDIO_PATH + file.name} type="audio/mpeg"/>
             <IconButton onClick={this.onDeleteClicked.bind(this, file.name)} style={{float: 'left', borderRadius: '50%', width: '45px', height: '45px', marginLeft: '45px'}}>
               <DeleteIcon style={{ color: 'red', fontSize: '28px'}} />
             </IconButton>
@@ -287,17 +292,44 @@ class EditPage extends Component {
     window.location.href = '/sundaymorningrecordings';
   }
 
+  /**
+   * STYLINGS
+   */
+
+  uploadButtonStyle = {
+    backgroundColor: 'white', 
+    color: 'blue', 
+    // float: 'right', 
+    fontSize: '15px', 
+    boxShadow: 'none', 
+    // marginTop: '30px',
+    marginBottom: '30px',
+    // position: 'absolute'
+  }
+
   cloudUploadIconStyle = {
     // marginRight: '15px',
-    float: 'right', 
+    // float: 'right', 
     color: 'blue',
     fontSize: '23px'
   }
 
+  exitButtonStyle = {
+    backgroundColor: 'white', 
+    color: '#08d30e', 
+    // float: 'right',
+    fontSize: '15px',
+    boxShadow: 'none',
+    // marginTop: '30px', 
+    marginBottom: '30px', 
+    // paddingRight: '20px',
+    // position: 'absolute'
+  }
+
   exitIconStyle = {
     // marginRight: '0px',
-    float: 'right',
-    color: 'green',
+    // float: 'right',
+    color: '#08d30e',
     fontSize: '23px'
   }
 
@@ -306,24 +338,26 @@ class EditPage extends Component {
       <div className="pageContainer">
         <NavBar />
         <div className="contentWrap">
-          <div className="btn-group-vertical" style={{marginRight: '60px', marginBottom: '30px', float: 'right'}}>
-            <Button
-              onClick={this.dropzoneModalOpen}
-              variant='contained'
-              style={{backgroundColor: 'white', color: 'blue', float: 'right', fontSize: '15px', boxShadow: 'none', marginBottom: '30px'}}
-              startIcon={<CloudUploadIcon style={this.cloudUploadIconStyle} />}
-            >
-              Upload
-            </Button>
+          {/* <div className="btn-group" style={{display: 'block', backgroundColor: 'red'}}> */}
+          <ButtonGroup vertical style={{top: '30px', position: 'sticky', backgroundColor: 'white', float: 'right', marginRight: '30px', marginTop: '30px'}}>
             <Button
               onClick={this.onExit}
               variant='contained'
-              style={{backgroundColor: 'white', color: 'green', float: 'right', fontSize: '15px', boxShadow: 'none', marginBottom: '30px', paddingRight: '20px'}}
+              style={this.exitButtonStyle}
               startIcon={<ExitToAppIcon style={this.exitIconStyle} />}
             >
               Exit
             </Button>
-          </div>
+            <Button
+              onClick={this.dropzoneModalOpen}
+              variant='contained'
+              style={this.uploadButtonStyle}
+              startIcon={<CloudUploadIcon style={this.cloudUploadIconStyle} />}
+            >
+              Upload
+            </Button>
+          </ButtonGroup>  
+          {/* </div> */}
           
 
           {/* <PasswordModal
