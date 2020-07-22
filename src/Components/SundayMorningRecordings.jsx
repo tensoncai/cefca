@@ -3,21 +3,21 @@ import NavBar from "./NavBar"
 import Footer from "./Footer";
 import "../CSS/Styling.css";
 import { Button } from "react-bootstrap";
-import S3 from 'aws-s3';
-import DropzoneUpload from "./DropzoneUpload";
-import PasswordModal from "./PasswordModal";
+// import S3 from 'aws-s3';
+// import DropzoneUpload from "./DropzoneUpload";
+// import PasswordModal from "./PasswordModal";
 import EditRoundedIcon from '@material-ui/icons/EditRounded';
-import {Route, Link} from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 const DYNAMODB_URL = process.env.REACT_APP_DYNAMODB_URL;
 const S3_AUDIO_PATH = process.env.REACT_APP_S3_AUDIO_PATH;
 
-const config = {
-  bucketName: process.env.REACT_APP_BUCKET_NAME,
-  region: 'us-east-2',
-  accessKeyId: process.env.REACT_APP_ACCESS_KEY_ID,
-  secretAccessKey: process.env.REACT_APP_SECRET_ACCESS_KEY
-}
+// const config = {
+//   bucketName: process.env.REACT_APP_BUCKET_NAME,
+//   region: 'us-east-2',
+//   accessKeyId: process.env.REACT_APP_ACCESS_KEY_ID,
+//   secretAccessKey: process.env.REACT_APP_SECRET_ACCESS_KEY
+// }
 
 // console.log(process.env.REACT_APP_ACCESS_KEY_ID);
 /**
@@ -29,19 +29,18 @@ const config = {
  *                 3 means show x mark (the file was not successfully uploaded)
  *  }
  */
-const S3Client = new S3(config);
+// const S3Client = new S3(config);
 
 class SundayMorningRecordings extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      selectedFiles: [],
-      byteBuffers: [],
-      showModal: false,
-      showUploadButton: false,
-      dropFileStatusProps: {},
-      uploadingError: false,
-      storedAudioRecords: [],
+      // selectedFiles: [],
+      // showModal: false,
+      // showUploadButton: false,
+      // dropFileStatusProps: {},
+      // uploadingError: false,
+      // storedAudioRecords: [],
       editIconClicked: false,
     }
 
@@ -54,118 +53,118 @@ class SundayMorningRecordings extends Component {
     this.uploadToDynamoDb       = this.uploadToDynamoDb.bind(this);
   }
 
-  onUploadClicked = () => {
-    this.setState({
-      showUploadButton: false
-    });
+  // onUploadClicked = () => {
+  //   this.setState({
+  //     showUploadButton: false
+  //   });
 
-    this.uploadToS3();
-    this.uploadToDynamoDb();
-  }
+  //   this.uploadToS3();
+  //   this.uploadToDynamoDb();
+  // }
 
-  onDrop = (fileList) => {
-    var selectedFiles = this.state.selectedFiles;
-    // check if newly dropped files are duplicates of currently selected files
-    for (var i = 0; i < fileList.length; i++) {
-      var fileExists = false;
-      var curFile = fileList[i];
+  // onDrop = (fileList) => {
+  //   var selectedFiles = this.state.selectedFiles;
+  //   // check if newly dropped files are duplicates of currently selected files
+  //   for (var i = 0; i < fileList.length; i++) {
+  //     var fileExists = false;
+  //     var curFile = fileList[i];
       
-      for (var j = 0; j < selectedFiles.length; j++) {
-        if (curFile.name === selectedFiles[j].name) {
-          fileExists = true;
-          break;
-        }
-      }
+  //     for (var j = 0; j < selectedFiles.length; j++) {
+  //       if (curFile.name === selectedFiles[j].name) {
+  //         fileExists = true;
+  //         break;
+  //       }
+  //     }
 
-      if (!fileExists) {
-        selectedFiles.push(curFile);
-      }
-    }
+  //     if (!fileExists) {
+  //       selectedFiles.push(curFile);
+  //     }
+  //   }
 
-    this.setState({
-      selectedFiles: selectedFiles,
-      showUploadButton: true
-    });
+  //   this.setState({
+  //     selectedFiles: selectedFiles,
+  //     showUploadButton: true
+  //   });
 
-    // set the loading property for each selected file
-    var obj = {};
-    for (var index = 0; index < selectedFiles.length; index++) {
-      var fileName = selectedFiles[index].name;
-      obj[fileName] = 0;
-    }
+  //   // set the loading property for each selected file
+  //   var obj = {};
+  //   for (var index = 0; index < selectedFiles.length; index++) {
+  //     var fileName = selectedFiles[index].name;
+  //     obj[fileName] = 0;
+  //   }
 
-    this.setState({
-      dropFileStatusProps: obj
-    });
-  }
+  //   this.setState({
+  //     dropFileStatusProps: obj
+  //   });
+  // }
 
-  deleteFileFromDropzone = (fileName) => {
-    // delete file from selectedFiles
-    this.setState(prevState => ({
-      selectedFiles: prevState.selectedFiles.filter(file => file.name !== fileName )
-    }));
+  // deleteFileFromDropzone = (fileName) => {
+  //   // delete file from selectedFiles
+  //   this.setState(prevState => ({
+  //     selectedFiles: prevState.selectedFiles.filter(file => file.name !== fileName )
+  //   }));
 
-    // delete file loading property from dropFileStatusProps
-    var obj = this.state.dropFileStatusProps;
-    delete obj[fileName];
-    this.setState({
-      dropFileStatusProps: obj
-    });
-  }
+  //   // delete file loading property from dropFileStatusProps
+  //   var obj = this.state.dropFileStatusProps;
+  //   delete obj[fileName];
+  //   this.setState({
+  //     dropFileStatusProps: obj
+  //   });
+  // }
 
-  uploadToS3 = async () => {
-    var obj = this.state.dropFileStatusProps;
+  // uploadToS3 = async () => {
+  //   var obj = this.state.dropFileStatusProps;
     
-    for (var i = 0; i < this.state.selectedFiles.length; i++) {
-      var file = this.state.selectedFiles[i];
-      var name = this.state.selectedFiles[i].name;
+  //   for (var i = 0; i < this.state.selectedFiles.length; i++) {
+  //     var file = this.state.selectedFiles[i];
+  //     var name = this.state.selectedFiles[i].name;
 
-      // set status for the uploading file to 1 (which means to show the loading spinner)
-      obj[name] = 1;
-      this.setState({
-        dropFileStatusProps: obj
-      });
+  //     // set status for the uploading file to 1 (which means to show the loading spinner)
+  //     obj[name] = 1;
+  //     this.setState({
+  //       dropFileStatusProps: obj
+  //     });
 
-      // upload the file
-      S3Client.uploadFile(file, name)
-      .then((data) => {
-        var key = data.key;
-        var name = key.substring(0, key.length - 6); // s3client adds '.x-m4a' to the end
-        console.log('key = ' + key);
-        console.log('name = ' + name);
+  //     // upload the file
+  //     S3Client.uploadFile(file, name)
+  //     .then((data) => {
+  //       var key = data.key;
+  //       var name = key.substring(0, key.length - 6); // s3client adds '.x-m4a' to the end
+  //       console.log('key = ' + key);
+  //       console.log('name = ' + name);
 
-        var obj = this.state.dropFileStatusProps;
-        obj[name] = 2; // the file was uploaded successfully, set a 2 to display the checkmark
-        this.setState({
-          dropFileStatusProps: obj
-        }, () => console.log(this.state.dropFileStatusProps));
-      })
-      .catch(err => {
-        this.setState({
-          uploadingError: true
-        }, () => console.log(err));
-      })
-    }
-  }
+  //       var obj = this.state.dropFileStatusProps;
+  //       obj[name] = 2; // the file was uploaded successfully, set a 2 to display the checkmark
+  //       this.setState({
+  //         dropFileStatusProps: obj
+  //       }, () => console.log(this.state.dropFileStatusProps));
+  //     })
+  //     .catch(err => {
+  //       this.setState({
+  //         uploadingError: true
+  //       }, () => console.log(err));
+  //     })
+  //   }
+  // }
 
   componentDidMount = () => {
     this.fetchAllFromDynamoDb();
   }
 
-  deleteFromDynamoDb = async () => {
-    const requestOptions = {
-      method: 'DELETE',
-      mode: 'cors',
-      cache: 'no-cache',
-      credentials: 'same-origin',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name: 'react fetch test' })
-    };
+  // deleteFromDynamoDb = async () => {
+  //   const requestOptions = {
+  //     method: 'DELETE',
+  //     mode: 'cors',
+  //     cache: 'no-cache',
+  //     credentials: 'same-origin',
+  //     headers: { 'Content-Type': 'application/json' },
+  //     body: JSON.stringify({ name: 'react fetch test' })
+  //   };
 
-    const response = await fetch(DYNAMODB_URL, requestOptions);
-    const jsonResponse = await response.json();
-    console.log(jsonResponse);
-  }
+  //   const response = await fetch(DYNAMODB_URL, requestOptions);
+  //   const jsonResponse = await response.json();
+  //   console.log(jsonResponse);
+  // }
 
   fetchAllFromDynamoDb = async () => {
     const response = await fetch(DYNAMODB_URL);
@@ -177,27 +176,27 @@ class SundayMorningRecordings extends Component {
     }, () => console.log(this.state.storedAudioRecords));
   }
 
-  uploadToDynamoDb = async () => {
-    var selectedFiles = this.state.selectedFiles;
-    for (var i = 0; i < selectedFiles.length; i++) {
-      const requestOptions = {
-        method: 'POST',
-        mode: 'cors',
-        cache: 'no-cache',
-        credentials: 'same-origin',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({name: selectedFiles[i].name, date: Date.now()})
-      };
+  // uploadToDynamoDb = async () => {
+  //   var selectedFiles = this.state.selectedFiles;
+  //   for (var i = 0; i < selectedFiles.length; i++) {
+  //     const requestOptions = {
+  //       method: 'POST',
+  //       mode: 'cors',
+  //       cache: 'no-cache',
+  //       credentials: 'same-origin',
+  //       headers: {'Content-Type': 'application/json'},
+  //       body: JSON.stringify({name: selectedFiles[i].name, date: Date.now()})
+  //     };
 
-      const response = await fetch(DYNAMODB_URL, requestOptions);
-      const jsonResponse = await response.json();
-      console.log(jsonResponse);
-    }
-  }
+  //     const response = await fetch(DYNAMODB_URL, requestOptions);
+  //     const jsonResponse = await response.json();
+  //     console.log(jsonResponse);
+  //   }
+  // }
 
-  onDeleteClicked = () => {
-    this.deleteFromDynamoDb();
-  }
+  // onDeleteClicked = () => {
+  //   this.deleteFromDynamoDb();
+  // }
 
   displayAudioRecords = () => {
     if (this.state.storedAudioRecords.length === 0) {
@@ -216,20 +215,20 @@ class SundayMorningRecordings extends Component {
     }
   }
 
-  handleShow = () => {
-    this.setState({
-      showModal: true
-    });
-  }
+  // handleShow = () => {
+  //   this.setState({
+  //     showModal: true
+  //   });
+  // }
 
-  handleClose = () => {
-    this.setState({
-      showModal: false,
-      selectedFiles: [],
-      dropFileStatusProps: {},
-      uploadingError: false
-    });
-  }
+  // handleClose = () => {
+  //   this.setState({
+  //     showModal: false,
+  //     selectedFiles: [],
+  //     dropFileStatusProps: {},
+  //     uploadingError: false
+  //   });
+  // }
 
   editButtonStyle = {
     display: 'block', 
