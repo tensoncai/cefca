@@ -1,10 +1,13 @@
 import React, { Component } from "react";
 import "../CSS/Styling.css";
 import Dropzone from 'react-dropzone';
-import { Modal, Button} from 'react-bootstrap';
+import {Modal, Button} from 'react-bootstrap';
 import Spinner from 'react-bootstrap/Spinner';
 import DeleteIcon from '@material-ui/icons/Delete';
 import CheckCircleOutlineRoundedIcon from '@material-ui/icons/CheckCircleOutlineRounded';
+import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
+import DateFnsUtils from '@date-io/date-fns';
+
 
 class DropzoneUpload extends Component {
   // constructor(props) {
@@ -28,6 +31,10 @@ class DropzoneUpload extends Component {
       return <CheckCircleOutlineRoundedIcon style={{float: 'right', color: '#00c400', fontSize: '28px'}} />
     }
   }
+
+  handleDateChange = (date) => {
+    
+  }
   
   render() {
     return (
@@ -42,6 +49,22 @@ class DropzoneUpload extends Component {
           </section>
           )}
         </Dropzone>
+        <MuiPickersUtilsProvider utils={DateFnsUtils}>
+          <KeyboardDatePicker
+            disableToolbar
+            fullWidth
+            variant="inline"
+            format="MM/dd/yyyy"
+            margin="normal"
+            id="date-picker-inline"
+            label="Date picker inline"
+            value={selectedDate}
+            onChange={this.handleDateChange}
+            KeyboardButtonProps = {{
+              'aria-label': 'change date',
+            }}
+          />
+        </MuiPickersUtilsProvider>
         <div style={{width: '100%'}} className="dropList">
           {this.props.selectedFiles.length > 0 && this.props.selectedFiles.map(file => (
             <li key={file.name} className="list-group-item" style={{width: '100%', textAlign: 'left'}}>

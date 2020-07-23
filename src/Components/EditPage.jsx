@@ -9,9 +9,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 import IconButton from '@material-ui/core/IconButton';
 import Button from '@material-ui/core/Button';
-// import SaveIcon from '@material-ui/icons/Save';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
-
 import S3 from 'aws-s3';
 
 const DYNAMODB_URL = process.env.REACT_APP_DYNAMODB_URL;
@@ -28,13 +26,20 @@ const config = {
 const S3Client = new S3(config);
 
 /**
- * dropFileStatusProps object
  * dropFileStatusProps: {
  *      filename1: 0 means show trashcan
  *                 1 means show loading spinner
  *                 2 means show checkmark (successfully uploaded)
  *                 3 means show x mark (the file was not successfully uploaded)
  *  }
+ */
+
+ /**
+ * selectedFiles: [
+ * {file: {fileObject}, date: null, loading property
+ * },
+ * {}
+ * ]
  */
 
 class EditPage extends Component {
