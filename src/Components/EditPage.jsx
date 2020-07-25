@@ -34,17 +34,6 @@ const S3Client = new S3(config);
  *  }
  */
 
- /**
- * selectedFiles: [
- * {file: {fileObject}, date: null, loading property
- * },
- * {}
- * ]
- */
-
- // STILL NEED TO DO! DATE picker for each drop file. Think about the state 
- // and how to organize it. Perhaps make an object like dropfilestatusprops
-
 class EditPage extends Component {
   constructor(props) {
     super(props);
@@ -73,7 +62,7 @@ class EditPage extends Component {
 
   /**
    * --------------------------------------------------------------
-   * DROPZONE MODAL upload, delete, drop, show modal, close modal
+   * DROPZONE MODAL upload, delete, drop, show modal, close modal, date
    * --------------------------------------------------------------
    */
 
@@ -90,17 +79,18 @@ class EditPage extends Component {
     // delete file from selectedFiles
     this.setState(prevState => ({
       selectedFiles: prevState.selectedFiles.filter(file => file.name !== fileName )
-    }));
+    }), () => console.log(this.state.selectedFiles));
 
     // delete file loading property from dropFileStatusProps
     var obj = this.state.dropFileStatusProps;
     delete obj[fileName];
     this.setState({
       dropFileStatusProps: obj
-    });
+    }, () => console.log(this.state.dropFileStatusProps));
 
+    // delete the date of the file
     var dateObj = this.state.dropFileDates;
-    delete obj[fileName];
+    delete dateObj[fileName];
     this.setState({
       dropFileDates: dateObj
     }, () => console.log(this.state.dropFileDates));
@@ -142,32 +132,34 @@ class EditPage extends Component {
   }
 
   dropzoneModalOpen = () => {
+    // console.log('dropzoneModalOpen');
     this.setState({
       showDropzoneModal: true
     });
   }
 
   dropzoneModalClose = () => {
+    // console.log('dropzoneModalClose');
     this.setState({
       showDropzoneModal: false,
       selectedFiles: [],
       dropFileStatusProps: {},
+      dropFileDates: {},
       uploadingError: false
     });
   }
 
   handleDateChange = (filename, date) => {
-    var obj = this.state.dropFileDates;
-    obj[filename] = date;
+    var dateObj = this.state.dropFileDates;
+    dateObj[filename] = date;
     this.setState({
-      dropFileDates: obj
+      dropFileDates: dateObj
     }, () => console.log(this.state.dropFileDates));
   }
 
-
   /**
    * --------------------------------------------------------------
-   * S3 upload, delete (still need to do delete)
+   * S3 upload and delete
    * --------------------------------------------------------------
    */
 
@@ -204,7 +196,7 @@ class EditPage extends Component {
   }
 
   deleteFromS3 = (filename) => {
-    console.log('delete from s3');
+    // console.log('delete from s3');
     S3Client
       .deleteFile(filename)
       .then(response => console.log(response))
@@ -254,7 +246,7 @@ class EditPage extends Component {
   onDeleteClicked = (filename) => {
     this.deleteFromDynamoDb(filename);
     this.deleteFromS3(filename);
-    console.log('delete clicked');
+
     this.setState(prevState => ({
       storedAudioRecords: prevState.storedAudioRecords.filter(file => file.name !== filename )
     }), console.log(this.state.storedAudioRecords));
@@ -291,8 +283,9 @@ class EditPage extends Component {
   }
   
   displayAudioRecords = () => {
+    console.log('displayAudioRecords');
     var audioRecords = this.state.storedAudioRecords;
-    console.log(audioRecords);
+    // console.log(audioRecords);
     if (audioRecords.length === 0) {
       return 'No audio recordings available'
     }
@@ -324,36 +317,25 @@ class EditPage extends Component {
   uploadButtonStyle = {
     backgroundColor: 'white', 
     color: 'blue', 
-    // float: 'right', 
     fontSize: '15px', 
-    boxShadow: 'none', 
-    // marginTop: '30px',
+    boxShadow: 'none',
     marginBottom: '30px',
-    // position: 'absolute'
   }
 
   cloudUploadIconStyle = {
-    // marginRight: '15px',
-    // float: 'right', 
     color: 'blue',
     fontSize: '23px'
   }
 
   exitButtonStyle = {
     backgroundColor: 'white', 
-    color: '#08d30e', 
-    // float: 'right',
+    color: '#08d30e',
     fontSize: '15px',
     boxShadow: 'none',
-    // marginTop: '30px', 
-    marginBottom: '30px', 
-    // paddingRight: '20px',
-    // position: 'absolute'
+    marginBottom: '30px',
   }
 
   exitIconStyle = {
-    // marginRight: '0px',
-    // float: 'right',
     color: '#08d30e',
     fontSize: '23px'
   }

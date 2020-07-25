@@ -1,14 +1,13 @@
 import React, { Component } from "react";
 import "../CSS/Styling.css";
 import Dropzone from 'react-dropzone';
-import {Modal, Button} from 'react-bootstrap';
+import { Modal, Button } from 'react-bootstrap';
 import Spinner from 'react-bootstrap/Spinner';
 import DeleteIcon from '@material-ui/icons/Delete';
 import CheckCircleOutlineRoundedIcon from '@material-ui/icons/CheckCircleOutlineRounded';
-import { MuiPickersUtilsProvider, KeyboardDatePicker, DatePicker, Calendar } from '@material-ui/pickers';
+import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
 
-console.log(new Date());
 class DropzoneUpload extends Component {
   constructor(props) {
     super(props);
@@ -19,25 +18,23 @@ class DropzoneUpload extends Component {
   }
 
   handleDateChange = (filename, date) => {
-    console.log(this);
-    console.log(date);
     console.log(typeof(date));
-    console.log(filename)
+    console.log(date);
     this.props.handleDateChange(filename, date);
   }
 
   displayDatePicker = (filename) => {
-    console.log(filename);
+    console.log('filename = ' + filename);
+    console.log('displaydatepicker');
     return <MuiPickersUtilsProvider utils={DateFnsUtils}>
             <KeyboardDatePicker
-              // type="date"
               style={{marginLeft: '50px'}}
               keyboard='true'
               autoOk='true'
               format={"MMMM, d yyyy"}
-              // mask="mmm, dd yyyy"
               placeholder="MM/DD/YYYY"
-              value={this.props.dropFileDates[filename]}
+              value={this.props.dropFileDates[filename] ? this.props.dropFileDates[filename]: null}
+              // value={this.props.dropFileDates[filename]}
               inputVariant="standard"
               onChange={this.handleDateChange.bind(this, filename)} 
               InputProps={{disableUnderline: true}}
@@ -59,11 +56,22 @@ class DropzoneUpload extends Component {
     }
   }
 
-  // handleDateChange = (date) => {
-  //   this.setState({
-  //     date: date
-  //   });
-  // }
+  shouldDisableUploadButton = () => {
+    var numOfFiles = this.props.selectedFiles.length;
+    var numOfDates = Object.keys(this.props.dropFileDates).length;
+    console.log('numOfFiles = ' + numOfFiles);
+    console.log('numOfDates = ' + numOfDates);
+
+    if (numOfFiles === 0) {
+      return true;
+    }
+
+    if (numOfDates < numOfFiles) {
+      return true;
+    }
+
+    return false;
+  }
   
   render() {
     return (
@@ -79,7 +87,6 @@ class DropzoneUpload extends Component {
           )}
         </Dropzone>
         <div style={{marginTop: '8px', width: '100%'}} className="dropList">
-
           {this.props.selectedFiles.length > 0 && this.props.selectedFiles.map(file => (              
               <ul key={file.name} style={{paddingTop: '3px', columns: 3, listStyleType: 'none', borderBottom: '1px solid', borderBottomColor: '#e0e0e0'}}>
                   <li style={{fontSize: '18px', fontWeight: 'bold'}}>{file.name}</li>
@@ -87,10 +94,6 @@ class DropzoneUpload extends Component {
                   <li>{this.displayFiles(file.name)}</li>
               </ul>
           ))}
-
-
-
-
         </div>
         <Modal.Footer style={{border: 'none'}}>
           <Button className="mr-auto" variant="outline-danger" onClick={this.props.handleClose}>
@@ -103,7 +106,7 @@ class DropzoneUpload extends Component {
             :
             ''
           }
-          <Button variant="outline-primary" disabled={this.props.selectedFiles.length === 0} onClick={this.props.onUpload}>
+          <Button variant="outline-primary" disabled={this.shouldDisableUploadButton()} onClick={this.props.onUpload}>
             Upload
           </Button>
         </Modal.Footer>
