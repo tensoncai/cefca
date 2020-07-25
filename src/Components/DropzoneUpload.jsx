@@ -5,22 +5,49 @@ import {Modal, Button} from 'react-bootstrap';
 import Spinner from 'react-bootstrap/Spinner';
 import DeleteIcon from '@material-ui/icons/Delete';
 import CheckCircleOutlineRoundedIcon from '@material-ui/icons/CheckCircleOutlineRounded';
-import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
+import { MuiPickersUtilsProvider, KeyboardDatePicker, DatePicker, Calendar } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
 
-
+console.log(new Date());
 class DropzoneUpload extends Component {
-  // constructor(props) {
-  //   super(props);
-  // }
+  constructor(props) {
+    super(props);
+  }
 
   onDelete = (fileName) => {
     this.props.onDelete(fileName);
   }
 
+  handleDateChange = (filename, date) => {
+    console.log(this);
+    console.log(date);
+    console.log(typeof(date));
+    console.log(filename)
+    this.props.handleDateChange(filename, date);
+  }
+
+  displayDatePicker = (filename) => {
+    console.log(filename);
+    return <MuiPickersUtilsProvider utils={DateFnsUtils}>
+            <KeyboardDatePicker
+              // type="date"
+              style={{marginLeft: '50px'}}
+              keyboard='true'
+              autoOk='true'
+              format={"MMMM, d yyyy"}
+              // mask="mmm, dd yyyy"
+              placeholder="MM/DD/YYYY"
+              value={this.props.dropFileDates[filename]}
+              inputVariant="standard"
+              onChange={this.handleDateChange.bind(this, filename)} 
+              InputProps={{disableUnderline: true}}
+            />
+          </MuiPickersUtilsProvider>
+  }
+
   displayFiles = (fileName) => {
     if (this.props.dropFileStatusProps[fileName] === 0) {
-      return <DeleteIcon style={{float: 'right', color: 'red', fontSize: '28px'}} onClick={this.onDelete.bind(this, fileName)} />
+      return <DeleteIcon style={{marginRight: '30px', float: 'right', color: 'red', fontSize: '28px'}} onClick={this.onDelete.bind(this, fileName)} />
     }
 
     if (this.props.dropFileStatusProps[fileName] === 1) {
@@ -32,9 +59,11 @@ class DropzoneUpload extends Component {
     }
   }
 
-  handleDateChange = (date) => {
-    
-  }
+  // handleDateChange = (date) => {
+  //   this.setState({
+  //     date: date
+  //   });
+  // }
   
   render() {
     return (
@@ -49,31 +78,19 @@ class DropzoneUpload extends Component {
           </section>
           )}
         </Dropzone>
-        <MuiPickersUtilsProvider utils={DateFnsUtils}>
-          <KeyboardDatePicker
-            disableToolbar
-            fullWidth
-            variant="inline"
-            format="MM/dd/yyyy"
-            margin="normal"
-            id="date-picker-inline"
-            label="Date picker inline"
-            value={selectedDate}
-            onChange={this.handleDateChange}
-            KeyboardButtonProps = {{
-              'aria-label': 'change date',
-            }}
-          />
-        </MuiPickersUtilsProvider>
-        <div style={{width: '100%'}} className="dropList">
-          {this.props.selectedFiles.length > 0 && this.props.selectedFiles.map(file => (
-            <li key={file.name} className="list-group-item" style={{width: '100%', textAlign: 'left'}}>
-              <div style={{fontSize: '18px', fontWeight: 'bold'}}>
-                {file.name}
-                {this.displayFiles(file.name)}
-              </div>
-            </li>
+        <div style={{marginTop: '8px', width: '100%'}} className="dropList">
+
+          {this.props.selectedFiles.length > 0 && this.props.selectedFiles.map(file => (              
+              <ul key={file.name} style={{paddingTop: '3px', columns: 3, listStyleType: 'none', borderBottom: '1px solid', borderBottomColor: '#e0e0e0'}}>
+                  <li style={{fontSize: '18px', fontWeight: 'bold'}}>{file.name}</li>
+                  <li>{this.displayDatePicker(file.name)}</li>
+                  <li>{this.displayFiles(file.name)}</li>
+              </ul>
           ))}
+
+
+
+
         </div>
         <Modal.Footer style={{border: 'none'}}>
           <Button className="mr-auto" variant="outline-danger" onClick={this.props.handleClose}>

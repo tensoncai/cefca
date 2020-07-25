@@ -42,6 +42,9 @@ const S3Client = new S3(config);
  * ]
  */
 
+ // STILL NEED TO DO! DATE picker for each drop file. Think about the state 
+ // and how to organize it. Perhaps make an object like dropfilestatusprops
+
 class EditPage extends Component {
   constructor(props) {
     super(props);
@@ -52,6 +55,7 @@ class EditPage extends Component {
       showDropzoneModal: false,
       showUploadButton: false,
       dropFileStatusProps: {},
+      dropFileDates: {},
       uploadingError: false,
       storedAudioRecords: [],
     }
@@ -64,6 +68,7 @@ class EditPage extends Component {
     this.uploadToS3             = this.uploadToS3.bind(this);
     this.uploadToDynamoDb       = this.uploadToDynamoDb.bind(this);
     this.onDeleteClicked        = this.onDeleteClicked.bind(this);
+    this.handleDateChange       = this.handleDateChange.bind(this);
   }
 
   /**
@@ -93,6 +98,12 @@ class EditPage extends Component {
     this.setState({
       dropFileStatusProps: obj
     });
+
+    var dateObj = this.state.dropFileDates;
+    delete obj[fileName];
+    this.setState({
+      dropFileDates: dateObj
+    }, () => console.log(this.state.dropFileDates));
   }
 
   onDrop = (fileList) => {
@@ -118,7 +129,7 @@ class EditPage extends Component {
       showUploadButton: true
     });
 
-    // set the loading property for each selected file
+    // set the status property for each selected file
     var obj = {};
     for (var index = 0; index < selectedFiles.length; index++) {
       var fileName = selectedFiles[index].name;
@@ -144,6 +155,15 @@ class EditPage extends Component {
       uploadingError: false
     });
   }
+
+  handleDateChange = (filename, date) => {
+    var obj = this.state.dropFileDates;
+    obj[filename] = date;
+    this.setState({
+      dropFileDates: obj
+    }, () => console.log(this.state.dropFileDates));
+  }
+
 
   /**
    * --------------------------------------------------------------
@@ -381,6 +401,8 @@ class EditPage extends Component {
             onUpload={this.onUploadClicked}
             dropFileStatusProps={this.state.dropFileStatusProps}
             uploadingError={this.state.uploadingError}
+            handleDateChange={this.handleDateChange}
+            dropFileDates={this.state.dropFileDates}
           />
         </div>
         <Footer />
