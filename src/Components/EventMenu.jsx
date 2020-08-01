@@ -3,7 +3,6 @@ import MenuItem from '@material-ui/core/MenuItem';
 import MatButton from '@material-ui/core/Button';
 import Menu from '@material-ui/core/Menu';
 
-
 class EventMenu extends Component {
   constructor(props) {
     super(props);

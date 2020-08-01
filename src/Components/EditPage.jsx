@@ -56,15 +56,15 @@ class EditPage extends Component {
       storedAudioRecords: [],
     }
 
-    this.onDrop                 = this.onDrop.bind(this);
-    this.dropzoneModalOpen      = this.dropzoneModalOpen.bind(this);
-    this.dropzoneModalClose     = this.dropzoneModalClose.bind(this);
-    this.deleteFileFromDropzone = this.deleteFileFromDropzone.bind(this);
-    this.onUploadClicked        = this.onUploadClicked.bind(this);
-    this.uploadToS3             = this.uploadToS3.bind(this);
-    this.uploadToDynamoDb       = this.uploadToDynamoDb.bind(this);
-    this.onDeleteClicked        = this.onDeleteClicked.bind(this);
-    this.handleDateChange       = this.handleDateChange.bind(this);
+    // this.onDrop                 = this.onDrop.bind(this);
+    // this.dropzoneModalOpen      = this.dropzoneModalOpen.bind(this);
+    // this.dropzoneModalClose     = this.dropzoneModalClose.bind(this);
+    // this.deleteFileFromDropzone = this.deleteFileFromDropzone.bind(this);
+    // this.onUploadClicked        = this.onUploadClicked.bind(this);
+    // this.uploadToS3             = this.uploadToS3.bind(this);
+    // this.uploadToDynamoDb       = this.uploadToDynamoDb.bind(this);
+    // this.onDeleteClicked        = this.onDeleteClicked.bind(this);
+    // this.handleDateChange       = this.handleDateChange.bind(this);
     // this.handleEventChange      = this.handleEventChange.bind(this);
   }
 
@@ -113,6 +113,7 @@ class EditPage extends Component {
 
   onDrop = (fileList) => {
     var selectedFiles = this.state.selectedFiles;
+
     // check if newly dropped files are duplicates of currently selected files
     for (var i = 0; i < fileList.length; i++) {
       var fileExists = false;
@@ -147,14 +148,12 @@ class EditPage extends Component {
   }
 
   dropzoneModalOpen = () => {
-    // console.log('dropzoneModalOpen');
     this.setState({
       showDropzoneModal: true
     });
   }
 
   dropzoneModalClose = () => {
-    // console.log('dropzoneModalClose');
     this.setState({
       showDropzoneModal: false,
       selectedFiles: [],
@@ -176,7 +175,7 @@ class EditPage extends Component {
   handleEventChange = (filename, eventSelected) => {
     var eventObj = this.state.dropFileEventTypes;
     eventObj[filename] = eventSelected;
-    console.log('file NAME = ' + filename);
+
     this.setState({
       dropFileEventTypes: eventObj
     }, () => console.log(this.state.dropFileEventTypes));
@@ -221,7 +220,6 @@ class EditPage extends Component {
   }
 
   deleteFromS3 = (filename) => {
-    // console.log('delete from s3');
     S3Client
       .deleteFile(filename)
       .then(response => console.log(response))
@@ -252,8 +250,6 @@ class EditPage extends Component {
     var dateString = '' + year + m + d;
     var dateNumber = parseInt(dateString, 10);
 
-    // console.log('string = ' + dateString);
-    // console.log('number = ' + dateNumber);
     return dateNumber;
   }
 
@@ -280,7 +276,6 @@ class EditPage extends Component {
   }
 
   deleteFromDynamoDb = async (filename) => {
-    // console.log('delete from dynamo db');
     const requestOptions = {
       method: 'DELETE',
       mode: 'cors',
@@ -335,9 +330,7 @@ class EditPage extends Component {
   }
   
   displayAudioRecords = () => {
-    // console.log('displayAudioRecords');
     var audioRecords = this.state.storedAudioRecords;
-    // console.log(audioRecords);
     if (audioRecords.length === 0) {
       return 'No audio recordings available'
     }
