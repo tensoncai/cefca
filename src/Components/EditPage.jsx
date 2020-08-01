@@ -173,10 +173,9 @@ class EditPage extends Component {
     }, /*() => console.log(this.state.dropFileDates)*/);
   }
 
-  handleEventChange = (filename, event) => {
-    console.log(event);
+  handleEventChange = (filename, eventSelected) => {
     var eventObj = this.state.dropFileEventTypes;
-    eventObj[filename] = event;
+    eventObj[filename] = eventSelected;
     console.log('file NAME = ' + filename);
     this.setState({
       dropFileEventTypes: eventObj

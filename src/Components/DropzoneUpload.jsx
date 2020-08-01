@@ -10,7 +10,7 @@ import DateFnsUtils from '@date-io/date-fns';
 import MenuItem from '@material-ui/core/MenuItem';
 import MatButton from '@material-ui/core/Button';
 import Menu from '@material-ui/core/Menu';
-
+import EventMenu from './EventMenu';
 
 class DropzoneUpload extends Component {
   constructor(props) {
@@ -79,7 +79,13 @@ class DropzoneUpload extends Component {
           <ul key={file.name} style={{width: '100%', paddingTop: '3px', columns: 4, listStyleType: 'none', borderBottom: '1px solid', borderBottomColor: '#e0e0e0'}}>
             <li style={{fontSize: '18px', fontWeight: 'bold'}}>{file.name}</li>
             <li>{this.displayDatePicker(file.name)}</li>
-            <li>{this.displayEventType(file.name)}</li>
+            <li>
+              <EventMenu 
+                filename={file.name} 
+                handleEventChange={this.props.handleEventChange}
+                eventSelected={this.props.dropFileEventTypes[file.name]}
+              />
+            </li>
             <li>{this.displayIcon(file.name)}</li>
           </ul>
         )

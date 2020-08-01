@@ -25,7 +25,7 @@ class EventMenu extends Component {
     });
   }
 
-  onHandleEventChange = (filename, event) => {
+  handleEventSelection = (filename, event) => {
     console.log(filename); // this always prints the last uploaded filename!
     if (event.currentTarget && event.currentTarget.id) {
       this.props.handleEventChange(filename, event.currentTarget.id);
@@ -38,7 +38,7 @@ class EventMenu extends Component {
     return (
       <div>
         <MatButton aria-controls="simple-menu" aria-haspopup="true" onClick={this.handleEventTypeClick}>
-          {this.props.filename ? this.props.filename : 'Event'}
+          {this.props.eventSelected ? this.props.eventSelected : 'Event'}
         </MatButton>
         <Menu
           anchorEl={this.state.anchorEl}
@@ -46,10 +46,10 @@ class EventMenu extends Component {
           open={Boolean(this.state.anchorEl)}
           onClose={this.closeMenu}
         >
-          <MenuItem id='sermon' onClick={this.onHandleEventChange.bind(this, this.props.filename)}>Sermon</MenuItem>
-          <MenuItem id='sundaySchool' onClick={this.onHandleEventChange.bind(this, this.props.filename)}>Sunday School</MenuItem>
-          <MenuItem id='bibleStudy' onClick={this.onHandleEventChange.bind(this, this.props.filename)}>Bible Study</MenuItem>
-          <MenuItem id='other' onClick={this.onHandleEventChange.bind(this, this.props.filename)}>Other</MenuItem>
+          <MenuItem id='sermon' onClick={this.handleEventSelection.bind(this, this.props.filename)}>Sermon</MenuItem>
+          <MenuItem id='sundaySchool' onClick={this.handleEventSelection.bind(this, this.props.filename)}>Sunday School</MenuItem>
+          <MenuItem id='bibleStudy' onClick={this.handleEventSelection.bind(this, this.props.filename)}>Bible Study</MenuItem>
+          <MenuItem id='other' onClick={this.handleEventSelection.bind(this, this.props.filename)}>Other</MenuItem>
         </Menu>
       </div>
     )
