@@ -26,7 +26,6 @@ class EventMenu extends Component {
   }
 
   handleEventSelection = (filename, event) => {
-    console.log(filename); // this always prints the last uploaded filename!
     if (event.currentTarget && event.currentTarget.id) {
       this.props.handleEventChange(filename, event.currentTarget.id);
     }

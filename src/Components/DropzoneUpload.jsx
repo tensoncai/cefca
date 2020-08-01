@@ -63,14 +63,14 @@ class DropzoneUpload extends Component {
     });
   }
 
-  onHandleEventChange = (filename, event) => {
-    console.log(filename); // this always prints the last uploaded filename!
-    if (event.currentTarget && event.currentTarget.id) {
-      this.props.handleEventChange(filename, event.currentTarget.id);
-    }
+  // onHandleEventChange = (filename, event) => {
+  //   console.log(filename); // this always prints the last uploaded filename!
+  //   if (event.currentTarget && event.currentTarget.id) {
+  //     this.props.handleEventChange(filename, event.currentTarget.id);
+  //   }
 
-    this.closeMenu();
-  }
+  //   this.closeMenu();
+  // }
 
   renderListOfSelectedFiles = () => {
     return (
@@ -93,27 +93,27 @@ class DropzoneUpload extends Component {
     )
   }
 
-  displayEventType = (filename) => {
-    return (
-      <div>
-        <MatButton aria-controls="simple-menu" aria-haspopup="true" onClick={this.handleEventTypeClick}>
-          {this.props.dropFileEventTypes[filename] ? this.props.dropFileEventTypes[filename] : 'Event'}
-        </MatButton>
-        <Menu
-          value='filename'
-          anchorEl={this.state.anchorEl}
-          keepMounted
-          open={Boolean(this.state.anchorEl)}
-          onClose={this.closeMenu}
-        >
-          <MenuItem id='sermon' onClick={this.onHandleEventChange.bind(this, filename)}>Sermon</MenuItem>
-          <MenuItem id='sundaySchool' onClick={this.onHandleEventChange.bind(this, filename)}>Sunday School</MenuItem>
-          <MenuItem id='bibleStudy' onClick={this.onHandleEventChange.bind(this, filename)}>Bible Study</MenuItem>
-          <MenuItem id='other' onClick={this.onHandleEventChange.bind(this, filename)}>Other</MenuItem>
-        </Menu>
-      </div>
-    )
-  }
+  // displayEventType = (filename) => {
+  //   return (
+  //     <div>
+  //       <MatButton aria-controls="simple-menu" aria-haspopup="true" onClick={this.handleEventTypeClick}>
+  //         {this.props.dropFileEventTypes[filename] ? this.props.dropFileEventTypes[filename] : 'Event'}
+  //       </MatButton>
+  //       <Menu
+  //         value='filename'
+  //         anchorEl={this.state.anchorEl}
+  //         keepMounted
+  //         open={Boolean(this.state.anchorEl)}
+  //         onClose={this.closeMenu}
+  //       >
+  //         <MenuItem id='sermon' onClick={this.onHandleEventChange.bind(this, filename)}>Sermon</MenuItem>
+  //         <MenuItem id='sundaySchool' onClick={this.onHandleEventChange.bind(this, filename)}>Sunday School</MenuItem>
+  //         <MenuItem id='bibleStudy' onClick={this.onHandleEventChange.bind(this, filename)}>Bible Study</MenuItem>
+  //         <MenuItem id='other' onClick={this.onHandleEventChange.bind(this, filename)}>Other</MenuItem>
+  //       </Menu>
+  //     </div>
+  //   )
+  // }
 
   displayIcon = (fileName) => {
     if (this.props.dropFileStatusProps[fileName] === 0) {
@@ -138,17 +138,19 @@ class DropzoneUpload extends Component {
     // console.log('numOfDates = ' + numOfDates);
     // console.log('numOfEvents = ' + numOfEvents);
 
-    if (numOfFiles === 0) {
+    if (numOfFiles === 0 || 
+        numOfDates < numOfFiles || 
+        numOfEvents < numOfFiles) {
       return true;
     }
 
-    if (numOfDates < numOfFiles) {
-      return true;
-    }
+    // if (numOfDates < numOfFiles) {
+    //   return true;
+    // }
 
-    if (numOfEvents < numOfFiles) {
-      return true;
-    }
+    // if (numOfEvents < numOfFiles) {
+    //   return true;
+    // }
 
     return false;
   }
