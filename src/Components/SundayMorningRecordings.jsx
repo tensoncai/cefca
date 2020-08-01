@@ -237,7 +237,7 @@ class SundayMorningRecordings extends Component {
                 storedAudioRecords: this.state.storedAudioRecords
               }
           }}>
-            <Button style={this.editButtonStyle} disabled={true} variant="primary">
+            <Button style={this.editButtonStyle} disabled={false} variant="primary">
               <EditRoundedIcon style={{fontSize: '20px', color: 'blue'}} />
             </Button>
           </Link>

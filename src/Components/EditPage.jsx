@@ -25,12 +25,18 @@ const config = {
 
 const S3Client = new S3(config);
 
+const events = {
+  SUNDAYSTUDY: 0,
+  SUNDAYSERMON: 1,
+  TUESDAYFRIDAYSTUDY: 2,
+  OTHER: 3
+}
+
 /**
  * dropFileStatusProps: {
  *      filename1: 0 means show trashcan
  *                 1 means show loading spinner
  *                 2 means show checkmark (successfully uploaded)
- *                 3 means show x mark (the file was not successfully uploaded)
  *  }
  */
 
@@ -45,6 +51,7 @@ class EditPage extends Component {
       showUploadButton: false,
       dropFileStatusProps: {},
       dropFileDates: {},
+      dropFileEventTypes: {},
       uploadingError: false,
       storedAudioRecords: [],
     }
@@ -58,12 +65,13 @@ class EditPage extends Component {
     this.uploadToDynamoDb       = this.uploadToDynamoDb.bind(this);
     this.onDeleteClicked        = this.onDeleteClicked.bind(this);
     this.handleDateChange       = this.handleDateChange.bind(this);
+    // this.handleEventChange      = this.handleEventChange.bind(this);
   }
 
   /**
-   * --------------------------------------------------------------
-   * DROPZONE MODAL upload, delete, drop, show modal, close modal, date
-   * --------------------------------------------------------------
+   * ---------------------------------------------------------------------------------
+   * DROPZONE MODAL upload, delete, drop, show modal, close modal, date, event types
+   * ---------------------------------------------------------------------------------
    */
 
   onUploadClicked = () => {
@@ -79,21 +87,28 @@ class EditPage extends Component {
     // delete file from selectedFiles
     this.setState(prevState => ({
       selectedFiles: prevState.selectedFiles.filter(file => file.name !== fileName )
-    }), () => console.log(this.state.selectedFiles));
+    }), /*() => console.log(this.state.selectedFiles)*/);
 
     // delete file loading property from dropFileStatusProps
     var obj = this.state.dropFileStatusProps;
     delete obj[fileName];
     this.setState({
       dropFileStatusProps: obj
-    }, () => console.log(this.state.dropFileStatusProps));
+    }, /*() => console.log(this.state.dropFileStatusProps)*/);
 
     // delete the date of the file
     var dateObj = this.state.dropFileDates;
     delete dateObj[fileName];
     this.setState({
       dropFileDates: dateObj
-    }, () => console.log(this.state.dropFileDates));
+    }, /*() => console.log(this.state.dropFileDates)*/);
+
+    // delete the event type of the file
+    var eventObj = this.state.dropFileEventTypes;
+    delete eventObj[fileName];
+    this.setState({
+      dropFileEventTypes: eventObj
+    }, () => console.log(this.state.dropFileEventTypes));
   }
 
   onDrop = (fileList) => {
@@ -145,6 +160,7 @@ class EditPage extends Component {
       selectedFiles: [],
       dropFileStatusProps: {},
       dropFileDates: {},
+      dropFileEventTypes: {},
       uploadingError: false
     });
   }
@@ -154,7 +170,17 @@ class EditPage extends Component {
     dateObj[filename] = date;
     this.setState({
       dropFileDates: dateObj
-    }, () => console.log(this.state.dropFileDates));
+    }, /*() => console.log(this.state.dropFileDates)*/);
+  }
+
+  handleEventChange = (filename, event) => {
+    console.log(event);
+    var eventObj = this.state.dropFileEventTypes;
+    eventObj[filename] = event;
+    console.log('file NAME = ' + filename);
+    this.setState({
+      dropFileEventTypes: eventObj
+    }, () => console.log(this.state.dropFileEventTypes));
   }
 
   /**
@@ -205,20 +231,47 @@ class EditPage extends Component {
 
   /**
    * --------------------------------------------------------------
-   * DYNAMO DB upload, delete
+   * DYNAMO DB upload, delete, format date
    * --------------------------------------------------------------
    */
+
+  formatDate = (filename) => {
+    var year = this.state.dropFileDates[filename].getFullYear();
+    var month = this.state.dropFileDates[filename].getMonth(); // Jan is 0
+    var day = this.state.dropFileDates[filename].getDate();
+
+    var m = '' + month;
+    if (month < 10) {
+      m = '0' + m;
+    }
+
+    var d = '' + day;
+    if (day < 10) {
+      d = '0' + d;
+    }
+
+    var dateString = '' + year + m + d;
+    var dateNumber = parseInt(dateString, 10);
+
+    // console.log('string = ' + dateString);
+    // console.log('number = ' + dateNumber);
+    return dateNumber;
+  }
 
   uploadToDynamoDb = async () => {
     var selectedFiles = this.state.selectedFiles;
     for (var i = 0; i < selectedFiles.length; i++) {
+      var file = selectedFiles[i];
+      var dateNumber = this.formatDate(file.name);
+      var eventType = this.state.dropFileEventTypes[file.name];
+
       const requestOptions = {
         method: 'POST',
         mode: 'cors',
         cache: 'no-cache',
         credentials: 'same-origin',
         headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({name: selectedFiles[i].name, date: Date.now()})
+        body: JSON.stringify({name: file.name, date: dateNumber, event: eventType})
       };
 
       const response = await fetch(DYNAMODB_URL, requestOptions);
@@ -228,7 +281,7 @@ class EditPage extends Component {
   }
 
   deleteFromDynamoDb = async (filename) => {
-    console.log('delete from dynamo db');
+    // console.log('delete from dynamo db');
     const requestOptions = {
       method: 'DELETE',
       mode: 'cors',
@@ -249,7 +302,7 @@ class EditPage extends Component {
 
     this.setState(prevState => ({
       storedAudioRecords: prevState.storedAudioRecords.filter(file => file.name !== filename )
-    }), console.log(this.state.storedAudioRecords));
+    }), /*console.log(this.state.storedAudioRecords)*/);
   }
 
   /**
@@ -283,7 +336,7 @@ class EditPage extends Component {
   }
   
   displayAudioRecords = () => {
-    console.log('displayAudioRecords');
+    // console.log('displayAudioRecords');
     var audioRecords = this.state.storedAudioRecords;
     // console.log(audioRecords);
     if (audioRecords.length === 0) {
@@ -385,6 +438,8 @@ class EditPage extends Component {
             uploadingError={this.state.uploadingError}
             handleDateChange={this.handleDateChange}
             dropFileDates={this.state.dropFileDates}
+            dropFileEventTypes={this.state.dropFileEventTypes}
+            handleEventChange={this.handleEventChange}
           />
         </div>
         <Footer />
