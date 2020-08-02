@@ -37,15 +37,11 @@ class SundayMorningRecordings extends Component {
     this.state = {
       storedAudioRecords: [],
       editIconClicked: false,
+      sermons: [],
+      sundaySchool: [],
+      bibleStudy: [],
+      other: []
     }
-
-    // this.onDrop                 = this.onDrop.bind(this);
-    // this.handleShow             = this.handleShow.bind(this);
-    // this.handleClose            = this.handleClose.bind(this);
-    // this.deleteFileFromDropzone = this.deleteFileFromDropzone.bind(this);
-    // this.onUploadClicked        = this.onUploadClicked.bind(this);
-    // this.uploadToS3             = this.uploadToS3.bind(this);
-    // this.uploadToDynamoDb       = this.uploadToDynamoDb.bind(this);
   }
 
   // onUploadClicked = () => {
@@ -166,9 +162,40 @@ class SundayMorningRecordings extends Component {
     const response = await fetch(DYNAMODB_URL);
     const jsonResponse = await response.json();
     console.log(jsonResponse);
+
+    // separate the audio files by event type (sermon, sundayschool, biblestudy, and other)
+    var fetchedAudioFiles = jsonResponse.Items;
+    
+    var sermonFiles = fetchedAudioFiles.filter(file => file.event === 'sermon');
+    console.log(sermonFiles);
+
+    var sundaySchoolFiles = fetchedAudioFiles.filter(file => file.event === 'sundayschool');
+    console.log(sundaySchoolFiles);
+
+    var bibleStudyFiles = fetchedAudioFiles.filter(file => file.event === 'biblestudy');
+    console.log(bibleStudyFiles);
+
+    var otherFiles = fetchedAudioFiles.filter(file => file.event === 'other');
+    console.log(otherFiles);
+
+    // sort the audio files by date (most recent to least recent)
+    sermonFiles.sort((file1, file2) => (file2.date > file1.date) ? 1 : -1);
+    sundaySchoolFiles.sort((file1, file2) => (file2.date > file1.date) ? 1 : -1);
+    bibleStudyFiles.sort((file1, file2) => (file2.date > file1.date) ? 1 : -1);
+    otherFiles.sort((file1, file2) => (file2.date > file1.date) ? 1 : -1);
+    
+    console.log('sorted');
+    // console.log(sermonFiles);
+    // console.log(sundaySchoolFiles);
+    // console.log(bibleStudyFiles);
+    // console.log(otherFiles);
+    
     this.setState({
-      storedAudioRecords: jsonResponse.Items
-    }, () => console.log(this.state.storedAudioRecords));
+      sermons: sermonFiles,
+      sundaySchool: sundaySchoolFiles,
+      bibleStudy: bibleStudyFiles,
+      other: otherFiles
+    }, () => console.log(this.state));
   }
 
   // uploadToDynamoDb = async () => {

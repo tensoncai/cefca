@@ -259,7 +259,7 @@ class EditPage extends Component {
         cache: 'no-cache',
         credentials: 'same-origin',
         headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({name: file.name, date: dateNumber, eventType: eventType})
+        body: JSON.stringify({name: file.name, date: dateNumber, event: eventType})
       };
 
       const response = await fetch(DYNAMODB_URL, requestOptions);

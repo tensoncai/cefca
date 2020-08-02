@@ -45,8 +45,8 @@ class EventMenu extends Component {
           onClose={this.closeMenu}
         >
           <MenuItem id='sermon' onClick={this.handleEventSelection.bind(this, this.props.filename)}>Sermon</MenuItem>
-          <MenuItem id='sundaySchool' onClick={this.handleEventSelection.bind(this, this.props.filename)}>Sunday School</MenuItem>
-          <MenuItem id='bibleStudy' onClick={this.handleEventSelection.bind(this, this.props.filename)}>Bible Study</MenuItem>
+          <MenuItem id='sundayschool' onClick={this.handleEventSelection.bind(this, this.props.filename)}>Sunday School</MenuItem>
+          <MenuItem id='biblestudy' onClick={this.handleEventSelection.bind(this, this.props.filename)}>Bible Study</MenuItem>
           <MenuItem id='other' onClick={this.handleEventSelection.bind(this, this.props.filename)}>Other</MenuItem>
         </Menu>
       </div>
