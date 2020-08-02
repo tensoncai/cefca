@@ -25,13 +25,6 @@ const config = {
 
 const S3Client = new S3(config);
 
-const events = {
-  SUNDAYSTUDY: 0,
-  SUNDAYSERMON: 1,
-  TUESDAYFRIDAYSTUDY: 2,
-  OTHER: 3
-}
-
 /**
  * dropFileStatusProps: {
  *      filename1: 0 means show trashcan
@@ -266,7 +259,7 @@ class EditPage extends Component {
         cache: 'no-cache',
         credentials: 'same-origin',
         headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({name: file.name, date: dateNumber, event: eventType})
+        body: JSON.stringify({name: file.name, date: dateNumber, eventType: eventType})
       };
 
       const response = await fetch(DYNAMODB_URL, requestOptions);
@@ -390,7 +383,6 @@ class EditPage extends Component {
       <div className="pageContainer">
         <NavBar />
         <div className="contentWrap">
-          {/* <div className="btn-group" style={{display: 'block', backgroundColor: 'red'}}> */}
           <ButtonGroup vertical style={{top: '30px', position: 'sticky', backgroundColor: 'white', float: 'right', marginRight: '30px', marginTop: '30px'}}>
             <Button
               onClick={this.onExit}
@@ -408,8 +400,7 @@ class EditPage extends Component {
             >
               Upload
             </Button>
-          </ButtonGroup>  
-          {/* </div> */}
+          </ButtonGroup>
           
 
           {/* <PasswordModal
