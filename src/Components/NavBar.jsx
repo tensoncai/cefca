@@ -23,9 +23,7 @@ class NavBar extends Component {
             <NavDropdown title="Connect" id="collasible-nav-dropdown">
               <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
             </NavDropdown>
-            <NavDropdown title="Sermons" id="collasible-nav-dropdown">
-              <NavDropdown.Item href="/sundaymorningrecordings">Sunday morning</NavDropdown.Item>
-            </NavDropdown>
+            <Nav.Link id="navLink" href="/sermons">Sermons</Nav.Link>
             <Nav.Link id="navLink" href="/contact">Contact</Nav.Link>
           </Nav>
         </Navbar.Collapse>

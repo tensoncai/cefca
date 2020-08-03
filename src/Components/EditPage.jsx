@@ -345,7 +345,7 @@ class EditPage extends Component {
   }
 
   onExit = () => {
-    window.location.href = '/sundaymorningrecordings';
+    window.location.href = '/sermons';
   }
 
   /**

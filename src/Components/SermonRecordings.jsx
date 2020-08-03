@@ -5,11 +5,12 @@ import "../CSS/Styling.css";
 import { Button } from "react-bootstrap";
 import EditRoundedIcon from '@material-ui/icons/EditRounded';
 import { Link } from 'react-router-dom';
+import { TextareaAutosize } from "@material-ui/core";
 
 const DYNAMODB_URL = process.env.REACT_APP_DYNAMODB_URL;
 const S3_AUDIO_PATH = process.env.REACT_APP_S3_AUDIO_PATH;
 
-class SundayMorningRecordings extends Component {
+class SermonRecordings extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -80,7 +81,11 @@ class SundayMorningRecordings extends Component {
 
   displayAudioRecords = (audioRecords) => {
     if (audioRecords.length === 0) {
-      return 'No audio recordings available for this event'
+      return (
+        <div style={{textAlign: 'center', fontWeight: 'bold'}}>
+          No audio recordings available for this event
+        </div>
+      )
     }
     else {
       return audioRecords.map((file) => 
@@ -88,7 +93,7 @@ class SundayMorningRecordings extends Component {
           <li style={{fontWeight: 'bold'}}>{file.name}</li>
           <li>
             <audio
-              style={{float: 'left', width: '50%'}} 
+              style={{float: 'left', width: '80%'}} 
               title={file.name}
               controls
               key={file.name} 
@@ -176,7 +181,7 @@ class SundayMorningRecordings extends Component {
                 storedAudioRecords: this.state.allAudioRecords
               }
           }}>
-            <Button style={this.editButtonStyle} disabled={false} variant="primary">
+            <Button style={this.editButtonStyle} disabled={true} variant="primary">
               <EditRoundedIcon style={{fontSize: '20px', color: 'blue'}} />
             </Button>
           </Link>
@@ -230,4 +235,4 @@ class SundayMorningRecordings extends Component {
   }
 }
 
-export default SundayMorningRecordings;
+export default SermonRecordings;

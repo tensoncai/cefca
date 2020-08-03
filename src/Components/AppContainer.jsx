@@ -7,7 +7,7 @@ import {
 import Home from "./Home";
 import Beliefs from "./Beliefs";
 import Contact from "./Contact";
-import SundayMorningRecordings from "./SundayMorningRecordings";
+import SermonRecordings from "./SermonRecordings";
 import EditPage from "./EditPage";
 
 class AppContainer extends Component {
@@ -19,7 +19,7 @@ class AppContainer extends Component {
           <Route exact path="/" component={Home} />
           <Route exact path="/beliefs" component={Beliefs} />
           <Route exact path="/contact" component={Contact} />
-          <Route exact path="/sundaymorningrecordings" component={SundayMorningRecordings} />
+          <Route exact path="/sermons" component={SermonRecordings} />
           <Route exact path="/editpage" component={EditPage} />
         </Switch>
       </Router>
