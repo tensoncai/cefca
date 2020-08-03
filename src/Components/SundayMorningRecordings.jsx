@@ -13,17 +13,23 @@ class SundayMorningRecordings extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      storedAudioRecords: [],
       editIconClicked: false,
+      allAudioRecords: [],
       sermons: [],
       sundaySchool: [],
       bibleStudy: [],
-      other: []
+      other: [],
+      eventButtons: {
+        disableSermons: false,
+        disableSundaySchool: false,
+        disableBibleStudy: false,
+        disableOther: false
+      }
     }
   }
 
   componentDidMount = () => {
-    this.fetchAllFromDynamoDb();
+    // this.fetchAllFromDynamoDb();
   }
 
   fetchAllFromDynamoDb = async () => {
@@ -46,6 +52,7 @@ class SundayMorningRecordings extends Component {
     otherFiles.sort((file1, file2) => (file2.date > file1.date) ? 1 : -1);
     
     this.setState({
+      allAudioRecords: fetchedAudioFiles,
       sermons: sermonFiles,
       sundaySchool: sundaySchoolFiles,
       bibleStudy: bibleStudyFiles,
@@ -54,7 +61,7 @@ class SundayMorningRecordings extends Component {
   }
 
   displayAudioRecords = () => {
-    var audioRecords = this.state.storedAudioRecords;
+    var audioRecords = this.state.allAudioRecords;
     if (audioRecords.length === 0) {
       return 'No audio recordings available'
     }
@@ -91,6 +98,55 @@ class SundayMorningRecordings extends Component {
     bottom: '60px'
   }
 
+  eventButtonStyle = {
+    boxShadow: '0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)',
+    margin: '30px',
+    height: '100px',
+    width: '150px',
+    borderRadius: '10px',
+    border: 'none',
+    fontSize: '20px',
+    fontWeight: 'bold'
+  }
+
+  onEventButtonClicked = (e) => {
+    console.log(e.currentTarget.value);
+    switch (e.currentTarget.value) {
+      case 'sermons':
+        this.setState({
+          disableSermons: true,
+          disableSundaySchool: false,
+          disableBibleStudy: false,
+          disableOther: false,
+        });
+        break;
+      case 'sundaySchool': 
+        this.setState({
+          disableSermons: false,
+          disableSundaySchool: true,
+          disableBibleStudy: false,
+          disableOther: false,
+        });
+        break;
+      case 'bibleStudy': 
+        this.setState({
+          disableSermons: false,
+          disableSundaySchool: false,
+          disableBibleStudy: true,
+          disableOther: false,
+        });
+        break;
+      case 'other': 
+        this.setState({
+          disableSermons: false,
+          disableSundaySchool: false,
+          disableBibleStudy: false,
+          disableOther: true,
+        });
+        break;
+    }
+  }
+
   render() {
     return (
       <div className="pageContainer">
@@ -98,16 +154,54 @@ class SundayMorningRecordings extends Component {
         <div className="contentWrap">
           <Link
             to={{
-              pathname: "/editpage", 
+              pathname: "/editpage",
               state: {
-                storedAudioRecords: this.state.storedAudioRecords
+                storedAudioRecords: this.state.allAudioRecords
               }
           }}>
             <Button style={this.editButtonStyle} disabled={false} variant="primary">
               <EditRoundedIcon style={{fontSize: '20px', color: 'blue'}} />
             </Button>
           </Link>
-          {this.displayAudioRecords()}
+          <div>
+            <Button
+              value='sermons'
+              id="eventButtonStyle"
+              style={{background: 'linear-gradient(0deg, #F09819 30%, #EDDE5D 100%)'}}
+              onClick={this.onEventButtonClicked}
+              disabled={this.state.disableSermons}
+            >
+              Sermons
+            </Button>
+            <Button 
+              value="sundaySchool"
+              id="eventButtonStyle" 
+              style={{background: 'linear-gradient(#8fdab0 0%, #228B22 100%)'}}
+              onClick={this.onEventButtonClicked}
+              disabled={this.state.disableSundaySchool}
+            >
+              Sunday School
+            </Button>
+            <Button 
+              value="bibleStudy"
+              id="eventButtonStyle" 
+              style={{background: 'linear-gradient(0deg, #b30000 0%, #ff7676 100%)'}}
+              onClick={this.onEventButtonClicked}
+              disabled={this.state.disableBibleStudy}
+            >
+              Bible Study
+            </Button>
+            <Button 
+              value="other"
+              id="eventButtonStyle" 
+              style={{background: 'linear-gradient(0deg, #0276FD 0%, #B9D3EE 100%)'}}
+              onClick={this.onEventButtonClicked}
+              disabled={this.state.disableOther}
+            >
+              Other
+            </Button>
+          </div>
+          {/* {this.displayAudioRecords()} */}
         </div>
         <Footer />
       </div>
