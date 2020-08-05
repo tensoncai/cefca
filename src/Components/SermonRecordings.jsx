@@ -5,11 +5,9 @@ import "../CSS/Styling.css";
 import { Button } from "react-bootstrap";
 import EditRoundedIcon from '@material-ui/icons/EditRounded';
 import { Link } from 'react-router-dom';
-import { TextareaAutosize } from "@material-ui/core";
 
 const DYNAMODB_URL = process.env.REACT_APP_DYNAMODB_URL;
 const S3_AUDIO_PATH = process.env.REACT_APP_S3_AUDIO_PATH;
-
 class SermonRecordings extends Component {
   constructor(props) {
     super(props);
@@ -40,7 +38,7 @@ class SermonRecordings extends Component {
     const response = await fetch(DYNAMODB_URL);
     const jsonResponse = await response.json();
     var fetchedAudioFiles = jsonResponse.Items;
-
+    console.log(fetchedAudioFiles);
     // separate the audio files by event type (sermon, sundayschool, biblestudy, and other)
     var sermonFiles = fetchedAudioFiles.filter(file => file.event === 'sermon');
     var sundaySchoolFiles = fetchedAudioFiles.filter(file => file.event === 'sundayschool');
@@ -53,19 +51,23 @@ class SermonRecordings extends Component {
     bibleStudyFiles.sort((file1, file2) => (file2.date > file1.date) ? 1 : -1);
     otherFiles.sort((file1, file2) => (file2.date > file1.date) ? 1 : -1);
     
+    // var items = [];
+    // for (var i = 0; i < 3; i++) {
+    //   items.push(sermonFiles[i]);
+    // }
+
     this.setState({
       allAudioRecords: fetchedAudioFiles,
       sermons: sermonFiles,
+      // sermons: items,
       sundaySchool: sundaySchoolFiles,
       bibleStudy: bibleStudyFiles,
       other: otherFiles
-    }, () => console.log('fetch is done'));
+    }, () => console.log(this.state));
   }
 
   displayAudioByEvent = () => {
-    console.log('here');
     if (this.state.disableSermons === true) { // the event selected was 'sermons'
-      console.log('hey');
       return this.displayAudioRecords(this.state.sermons);
     }
     else if (this.state.disableSundaySchool === true) { // the event selected was 'sunday school'
@@ -88,20 +90,26 @@ class SermonRecordings extends Component {
       )
     }
     else {
-      return audioRecords.map((file) => 
-        <div key={file.name} style={{margin: '100px', listStyleType: 'none'}}>
-          <li style={{fontWeight: 'bold'}}>{file.name}</li>
-          <li>
-            <audio
-              style={{float: 'left', width: '80%'}} 
-              title={file.name}
-              controls
-              key={file.name} 
-              src={S3_AUDIO_PATH + file.name} 
-              type="audio/mpeg"/>
-          </li>
-        </div>
-      );
+      return (
+        audioRecords.map(file => {
+          console.log(S3_AUDIO_PATH + file.name);
+          return (
+            <div key={file.name} style={{margin: '100px', listStyleType: 'none'}}>
+              <li style={{fontWeight: 'bold'}}>{file.name}</li>
+              <li>
+                <audio
+                  style={{float: 'left', width: '80%'}} 
+                  title={file.name}
+                  controls
+                  key={file.name}
+                >
+                  <source src={S3_AUDIO_PATH + file.name} type="audio/mpeg" />
+                </audio>
+              </li>
+            </div>
+          )
+        })
+      )
     }
   }
 
@@ -131,10 +139,9 @@ class SermonRecordings extends Component {
 
   onEventButtonClicked = (e) => {
     var eventSelected = e.currentTarget.value;
-
+    console.log('event selected = ' + eventSelected);
     switch (eventSelected) {
       case 'sermons':
-        console.log('sermons clicked');
         this.setState({
           disableSermons: true,
           disableSundaySchool: false,
@@ -166,6 +173,8 @@ class SermonRecordings extends Component {
           disableOther: true,
         });
         break;
+      default:
+        break;
     }
   }
 
@@ -181,7 +190,7 @@ class SermonRecordings extends Component {
                 storedAudioRecords: this.state.allAudioRecords
               }
           }}>
-            <Button style={this.editButtonStyle} disabled={true} variant="primary">
+            <Button style={this.editButtonStyle} disabled={false} variant="primary">
               <EditRoundedIcon style={{fontSize: '20px', color: 'blue'}} />
             </Button>
           </Link>

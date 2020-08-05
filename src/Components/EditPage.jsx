@@ -3,7 +3,7 @@ import NavBar from "./NavBar";
 import Footer from "./Footer";
 import "../CSS/Styling.css";
 import ButtonGroup from 'react-bootstrap/ButtonGroup'
-// import PasswordModal from "./PasswordModal";
+import PasswordModal from "./PasswordModal";
 import DropzoneUpload from "./DropzoneUpload";
 import DeleteIcon from '@material-ui/icons/Delete';
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
@@ -14,7 +14,6 @@ import S3 from 'aws-s3';
 
 const DYNAMODB_URL = process.env.REACT_APP_DYNAMODB_URL;
 const S3_AUDIO_PATH = process.env.REACT_APP_S3_AUDIO_PATH;
-// const password = process.env.REACT_APP_PASSWORD_MODAL;
 
 const config = {
   bucketName: process.env.REACT_APP_BUCKET_NAME,
@@ -252,7 +251,8 @@ class EditPage extends Component {
       var file = selectedFiles[i];
       var dateNumber = this.formatDate(file.name);
       var eventType = this.state.dropFileEventTypes[file.name];
-
+      console.log('?');
+      console.log(file.name);
       const requestOptions = {
         method: 'POST',
         mode: 'cors',
@@ -383,6 +383,10 @@ class EditPage extends Component {
       <div className="pageContainer">
         <NavBar />
         <div className="contentWrap">
+          <PasswordModal
+            show={this.state.showPasswordModal} 
+            handleClose={this.passwordModalClose}
+          />
           <ButtonGroup vertical style={{top: '30px', position: 'sticky', backgroundColor: 'white', float: 'right', marginRight: '30px', marginTop: '30px'}}>
             <Button
               onClick={this.onExit}
@@ -401,12 +405,6 @@ class EditPage extends Component {
               Upload
             </Button>
           </ButtonGroup>
-          
-
-          {/* <PasswordModal
-            show={this.state.showPasswordModal} 
-            handleClose={this.passwordModalClose}
-          /> */}
           <div>
             {this.displayAudioRecords()}
           </div>

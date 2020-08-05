@@ -3,7 +3,7 @@ import "../CSS/Styling.css";
 import { Modal, Button, Form} from 'react-bootstrap';
 import CloseRoundedIcon from '@material-ui/icons/CloseRounded';
 import {Route, Link} from 'react-router-dom';
-import SundayMorningRecordings from "./SundayMorningRecordings";
+import SermonRecordings from "./SermonRecordings";
 
 const password = process.env.REACT_APP_PASSWORD_MODAL;
 class PasswordModal extends Component {
@@ -42,7 +42,7 @@ class PasswordModal extends Component {
       <Modal size='lg' backdrop='static' show={this.props.show} onHide={this.props.handleClose}>
         <Modal.Header style={{border: 'none', display: 'flex', justifyContent: 'right'}}>
           <div style={{display: 'flex', justifyContent: 'right'}}>
-            <Link to="/sundaymorningrecordings">
+            <Link to="/sermons">
               <CloseRoundedIcon style={{verticalAlign: 'right'}} onClick={this.props.handleClose} />
             </Link>
           </div>
@@ -53,7 +53,7 @@ class PasswordModal extends Component {
             <Form.Control onChange={this.handleChange} style={{verticalAlign: 'middle'}} type="password" placeholder="Enter password" />
             <Button disabled={this.state.inputPass.length === 0} variant="outline-primary" onClick={this.validatePass}>Go</Button>
           </div>
-          {/* <Route exact path="/sundaymorningrecordings" render={(props) => <SundayMorningRecordings {...props} />} /> */}
+          {/* <Route exact path="/sermons" render={(props) => <SermonRecordings {...props} />} /> */}
 
           {/* <div style={{display: 'flex', justifyContent: 'center', color: 'red'}}>
             {this.state.passIsValid ? '' : 'Wrong password'}
