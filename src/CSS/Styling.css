@@ -48,6 +48,14 @@
   padding: 0px 0px;
 }
 
+@media (max-width: 600px) {
+  .navbar-collapse {
+    background-color: #0072ff;
+    z-index: 10000;
+    opacity: 0.9;
+  }
+}
+
 .dropzone {
   display: flex;
   align-items: center;
@@ -102,6 +110,26 @@
   border: none;
   font-size: 20px;
   font-weight: bold;
+}
+
+@media only screen and (max-width: 700px){
+  #eventButtonStyle { 
+    width: 25%;
+  }
+
+  .welcomeText {
+    font-size: 50px;
+  }
+}
+
+@media only screen and (max-width: 500px){
+  #eventButtonStyle { 
+    width: 30%;
+  }
+
+  .welcomeText {
+    font-size: 30px;
+  }
 }
 
 .footer {

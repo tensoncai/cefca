@@ -92,7 +92,6 @@ class SermonRecordings extends Component {
     else {
       return (
         audioRecords.map(file => {
-          console.log(S3_AUDIO_PATH + file.name);
           return (
             <div key={file.name} style={{margin: '100px', listStyleType: 'none'}}>
               <li style={{fontWeight: 'bold'}}>{file.name}</li>
@@ -102,6 +101,7 @@ class SermonRecordings extends Component {
                   title={file.name}
                   controls
                   key={file.name}
+                  id='audio'
                 >
                   <source src={S3_AUDIO_PATH + file.name} type="audio/mpeg" />
                 </audio>
