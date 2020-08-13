@@ -38,7 +38,7 @@ class SermonRecordings extends Component {
     const response = await fetch(DYNAMODB_URL);
     const jsonResponse = await response.json();
     var fetchedAudioFiles = jsonResponse.Items;
-    console.log(fetchedAudioFiles);
+
     // separate the audio files by event type (sermon, sundayschool, biblestudy, and other)
     var sermonFiles = fetchedAudioFiles.filter(file => file.event === 'sermon');
     var sundaySchoolFiles = fetchedAudioFiles.filter(file => file.event === 'sundayschool');
@@ -63,7 +63,7 @@ class SermonRecordings extends Component {
       sundaySchool: sundaySchoolFiles,
       bibleStudy: bibleStudyFiles,
       other: otherFiles
-    }, () => console.log(this.state));
+    });
   }
 
   displayAudioByEvent = () => {
@@ -139,7 +139,7 @@ class SermonRecordings extends Component {
 
   onEventButtonClicked = (e) => {
     var eventSelected = e.currentTarget.value;
-    console.log('event selected = ' + eventSelected);
+    
     switch (eventSelected) {
       case 'sermons':
         this.setState({

@@ -79,28 +79,28 @@ class EditPage extends Component {
     // delete file from selectedFiles
     this.setState(prevState => ({
       selectedFiles: prevState.selectedFiles.filter(file => file.name !== fileName )
-    }), /*() => console.log(this.state.selectedFiles)*/);
+    }));
 
     // delete file loading property from dropFileStatusProps
     var obj = this.state.dropFileStatusProps;
     delete obj[fileName];
     this.setState({
       dropFileStatusProps: obj
-    }, /*() => console.log(this.state.dropFileStatusProps)*/);
+    });
 
     // delete the date of the file
     var dateObj = this.state.dropFileDates;
     delete dateObj[fileName];
     this.setState({
       dropFileDates: dateObj
-    }, /*() => console.log(this.state.dropFileDates)*/);
+    });
 
     // delete the event type of the file
     var eventObj = this.state.dropFileEventTypes;
     delete eventObj[fileName];
     this.setState({
       dropFileEventTypes: eventObj
-    }, () => console.log(this.state.dropFileEventTypes));
+    });
   }
 
   onDrop = (fileList) => {
@@ -161,7 +161,7 @@ class EditPage extends Component {
     dateObj[filename] = date;
     this.setState({
       dropFileDates: dateObj
-    }, /*() => console.log(this.state.dropFileDates)*/);
+    });
   }
 
   handleEventChange = (filename, eventSelected) => {
@@ -170,7 +170,7 @@ class EditPage extends Component {
 
     this.setState({
       dropFileEventTypes: eventObj
-    }, () => console.log(this.state.dropFileEventTypes));
+    });
   }
 
   /**
@@ -201,12 +201,12 @@ class EditPage extends Component {
           obj[name] = 2; // the file was uploaded successfully, set a 2 to display the checkmark
           this.setState({
             dropFileStatusProps: obj
-          }, () => console.log(this.state.dropFileStatusProps));
+          });
         })
         .catch(err => {
           this.setState({
             uploadingError: true
-          }, () => console.log(err));
+          }, () => console.error(err));
         })
     }
   }
@@ -251,8 +251,7 @@ class EditPage extends Component {
       var file = selectedFiles[i];
       var dateNumber = this.formatDate(file.name);
       var eventType = this.state.dropFileEventTypes[file.name];
-      console.log('?');
-      console.log(file.name);
+
       const requestOptions = {
         method: 'POST',
         mode: 'cors',
@@ -264,7 +263,6 @@ class EditPage extends Component {
 
       const response = await fetch(DYNAMODB_URL, requestOptions);
       const jsonResponse = await response.json();
-      console.log(jsonResponse);
     }
   }
 
@@ -280,7 +278,6 @@ class EditPage extends Component {
 
     const response = await fetch(DYNAMODB_URL, requestOptions);
     const jsonResponse = await response.json();
-    console.log(jsonResponse);
   }
 
   onDeleteClicked = (filename) => {
@@ -289,7 +286,7 @@ class EditPage extends Component {
 
     this.setState(prevState => ({
       storedAudioRecords: prevState.storedAudioRecords.filter(file => file.name !== filename )
-    }), /*console.log(this.state.storedAudioRecords)*/);
+    }));
   }
 
   /**
