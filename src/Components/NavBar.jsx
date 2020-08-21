@@ -17,9 +17,7 @@ class NavBar extends Component {
         <Navbar.Toggle id="navBarToggle" aria-controls="responsive-navbar-nav" />
         <Navbar.Collapse id="responsive-navbar-nav">
           <Nav className="ml-auto">
-            <NavDropdown title="About" id="collasible-nav-dropdown">
-                <NavDropdown.Item id="navItem" href="/beliefs">What We Believe</NavDropdown.Item>
-            </NavDropdown>
+            <Nav.Link id="navLink" href="/beliefs">Beliefs</Nav.Link>
             <NavDropdown title="Connect" id="collasible-nav-dropdown">
               <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
             </NavDropdown>
