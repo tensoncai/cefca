@@ -6,8 +6,8 @@ class Footer extends Component {
   render() {
     return (
       <div className="footer">
-        <div>4911 Lincoln Way, Ames, IA 50014</div>
-        <div>(515) 233-4436</div>
+        <div className="footerText">4911 Lincoln Way, Ames, IA 50014</div>
+        <div className="footerText">(515) 233-4436</div>
       </div>
       
     )
