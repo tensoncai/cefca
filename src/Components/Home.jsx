@@ -16,6 +16,9 @@ class Home extends Component {
               Welcome to<br/>Chinese Evangelical<br/>Free Church of Ames
             </p>
           </div>
+          <div>
+            <img src='/CEFCA.jpg' />
+          </div>
         </div>
         <Footer />
       </div>
