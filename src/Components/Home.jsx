@@ -16,7 +16,7 @@ class Home extends Component {
               Welcome to<br/>Chinese Evangelical<br/>Free Church of Ames
             </p>
           </div>
-          <div style={{width: '100%', height: '100%'}}>
+          <div style={{backgroundColor: '#ededed', width: '100%', height: '100%'}}>
             <img id='picture' src='/cefca-original.jpg' />
           </div>
         </div>
