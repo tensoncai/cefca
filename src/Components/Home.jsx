@@ -17,7 +17,7 @@ class Home extends Component {
             </p>
           </div>
           <div style={{width: '100%', height: '100%'}}>
-            <img id='picture' src='/CEFCA.png' />
+            <img id='picture' src='/cefca-original.jpg' />
           </div>
         </div>
         <Footer />
