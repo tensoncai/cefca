@@ -9,9 +9,7 @@ class Beliefs extends Component {
       <div className="pageContainer">
         <NavBar />
         <div>
-          <iframe style={{width: '100%', height: '100%', position: 'fixed'}} 
-            src='/2019_nov_efca_sof_mandarin.pdf' 
-          />
+          <embed src='/2019_nov_efca_sof_mandarin.pdf#toolbar=0&navpanes=0&scrollbar=0&statusbar=0&messages=0&scrollbar=0' type="application/pdf" width="100%" height="800px"></embed>
         </div>
         <Footer />
       </div>

@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Navbar, Nav, NavDropdown } from 'react-bootstrap';
+import { Navbar, Nav } from 'react-bootstrap';
 import "../CSS/Styling.css";
 
 class NavBar extends Component {
@@ -18,9 +18,6 @@ class NavBar extends Component {
         <Navbar.Collapse id="responsive-navbar-nav">
           <Nav className="ml-auto">
             <Nav.Link id="navLink" href="/beliefs">Beliefs</Nav.Link>
-            <NavDropdown title="Connect" id="collasible-nav-dropdown">
-              <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
-            </NavDropdown>
             <Nav.Link id="navLink" href="/sermons">Sermons</Nav.Link>
             <Nav.Link id="navLink" href="/contact">Contact</Nav.Link>
           </Nav>
