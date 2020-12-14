@@ -17,7 +17,7 @@ class Home extends Component {
             </p>
           </div>
           <div style={{backgroundColor: '#ededed', width: '100%', height: '100%'}}>
-            <img id='picture' src='/cefca-original.jpg' />
+            <img id='picture' src='/cefca-original.jpg' alt='church' />
           </div>
         </div>
         <Footer />

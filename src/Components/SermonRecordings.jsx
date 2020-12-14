@@ -30,11 +30,13 @@ class SermonRecordings extends Component {
   }
 
   componentDidMount = () => {
-    this.fetchAllFromDynamoDb();
+    console.log("component mount");
+    // this.fetchAllFromDynamoDb();
   }
 
   fetchAllFromDynamoDb = async () => {
     // fetch all audio file records from dynamoDB
+    console.log("fetch");
     const response = await fetch(DYNAMODB_URL);
     const jsonResponse = await response.json();
     var fetchedAudioFiles = jsonResponse.Items;
