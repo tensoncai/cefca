@@ -31,7 +31,7 @@ class SermonRecordings extends Component {
 
   componentDidMount = () => {
     console.log("component mount");
-    // this.fetchAllFromDynamoDb();
+    this.fetchAllFromDynamoDb();
   }
 
   fetchAllFromDynamoDb = async () => {
