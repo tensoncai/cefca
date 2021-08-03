@@ -16,7 +16,8 @@ class AppContainer extends Component {
     return (
       <Router>
         <Switch>
-          <Route exact path="/" component={Home} />
+          <Route exact path="/" render={() => {window.location.href="main.html"}} />
+          {/* <Route exact path="/" component={Home} /> */}
           <Route exact path="/beliefs" component={Beliefs} />
           <Route exact path="/contact" component={Contact} />
           <Route exact path="/sermons" component={SermonRecordings} />
