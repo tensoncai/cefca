@@ -31,89 +31,89 @@ class SermonRecordings extends Component {
 
   componentDidMount = () => {
     console.log("component mount");
-    this.fetchAllFromDynamoDb();
+    // this.fetchAllFromDynamoDb();
   }
 
-  fetchAllFromDynamoDb = async () => {
-    // fetch all audio file records from dynamoDB
-    console.log("fetch");
-    const response = await fetch(DYNAMODB_URL);
-    const jsonResponse = await response.json();
-    var fetchedAudioFiles = jsonResponse.Items;
+  // fetchAllFromDynamoDb = async () => {
+  //   // fetch all audio file records from dynamoDB
+  //   console.log("fetch");
+  //   const response = await fetch(DYNAMODB_URL);
+  //   const jsonResponse = await response.json();
+  //   var fetchedAudioFiles = jsonResponse.Items;
 
-    // separate the audio files by event type (sermon, sundayschool, biblestudy, and other)
-    var sermonFiles = fetchedAudioFiles.filter(file => file.event === 'sermon');
-    var sundaySchoolFiles = fetchedAudioFiles.filter(file => file.event === 'sundayschool');
-    var bibleStudyFiles = fetchedAudioFiles.filter(file => file.event === 'biblestudy');
-    var otherFiles = fetchedAudioFiles.filter(file => file.event === 'other');
+  //   // separate the audio files by event type (sermon, sundayschool, biblestudy, and other)
+  //   var sermonFiles = fetchedAudioFiles.filter(file => file.event === 'sermon');
+  //   var sundaySchoolFiles = fetchedAudioFiles.filter(file => file.event === 'sundayschool');
+  //   var bibleStudyFiles = fetchedAudioFiles.filter(file => file.event === 'biblestudy');
+  //   var otherFiles = fetchedAudioFiles.filter(file => file.event === 'other');
 
-    // sort the audio files by date (from most recent to least recent)
-    sermonFiles.sort((file1, file2) => (file2.date > file1.date) ? 1 : -1);
-    sundaySchoolFiles.sort((file1, file2) => (file2.date > file1.date) ? 1 : -1);
-    bibleStudyFiles.sort((file1, file2) => (file2.date > file1.date) ? 1 : -1);
-    otherFiles.sort((file1, file2) => (file2.date > file1.date) ? 1 : -1);
+  //   // sort the audio files by date (from most recent to least recent)
+  //   sermonFiles.sort((file1, file2) => (file2.date > file1.date) ? 1 : -1);
+  //   sundaySchoolFiles.sort((file1, file2) => (file2.date > file1.date) ? 1 : -1);
+  //   bibleStudyFiles.sort((file1, file2) => (file2.date > file1.date) ? 1 : -1);
+  //   otherFiles.sort((file1, file2) => (file2.date > file1.date) ? 1 : -1);
     
-    // var items = [];
-    // for (var i = 0; i < 3; i++) {
-    //   items.push(sermonFiles[i]);
-    // }
+  //   // var items = [];
+  //   // for (var i = 0; i < 3; i++) {
+  //   //   items.push(sermonFiles[i]);
+  //   // }
 
-    this.setState({
-      allAudioRecords: fetchedAudioFiles,
-      sermons: sermonFiles,
-      // sermons: items,
-      sundaySchool: sundaySchoolFiles,
-      bibleStudy: bibleStudyFiles,
-      other: otherFiles
-    });
-  }
+  //   this.setState({
+  //     allAudioRecords: fetchedAudioFiles,
+  //     sermons: sermonFiles,
+  //     // sermons: items,
+  //     sundaySchool: sundaySchoolFiles,
+  //     bibleStudy: bibleStudyFiles,
+  //     other: otherFiles
+  //   });
+  // }
 
-  displayAudioByEvent = () => {
-    if (this.state.disableSermons === true) { // the event selected was 'sermons'
-      return this.displayAudioRecords(this.state.sermons);
-    }
-    else if (this.state.disableSundaySchool === true) { // the event selected was 'sunday school'
-      return this.displayAudioRecords(this.state.sundaySchool);
-    }
-    else if (this.state.disableBibleStudy === true) { // the event selected was 'bible study'
-      return this.displayAudioRecords(this.state.bibleStudy);
-    }
-    else if (this.state.disableOther === true) { // the event selected was 'other'
-      return this.displayAudioRecords(this.state.other);
-    }
-  }
+  // displayAudioByEvent = () => {
+  //   if (this.state.disableSermons === true) { // the event selected was 'sermons'
+  //     return this.displayAudioRecords(this.state.sermons);
+  //   }
+  //   else if (this.state.disableSundaySchool === true) { // the event selected was 'sunday school'
+  //     return this.displayAudioRecords(this.state.sundaySchool);
+  //   }
+  //   else if (this.state.disableBibleStudy === true) { // the event selected was 'bible study'
+  //     return this.displayAudioRecords(this.state.bibleStudy);
+  //   }
+  //   else if (this.state.disableOther === true) { // the event selected was 'other'
+  //     return this.displayAudioRecords(this.state.other);
+  //   }
+  // }
 
-  displayAudioRecords = (audioRecords) => {
-    if (audioRecords.length === 0) {
-      return (
-        <div style={{textAlign: 'center', fontWeight: 'bold'}}>
-          No audio recordings available for this event
-        </div>
-      )
-    }
-    else {
-      return (
-        audioRecords.map(file => {
-          return (
-            <div key={file.name} style={{margin: '100px', listStyleType: 'none'}}>
-              <li style={{fontWeight: 'bold'}}>{file.name}</li>
-              <li>
-                <audio
-                  style={{float: 'left', width: '80%'}} 
-                  title={file.name}
-                  controls
-                  key={file.name}
-                  id='audio'
-                >
-                  <source src={S3_AUDIO_PATH + file.name} type="audio/mpeg" />
-                </audio>
-              </li>
-            </div>
-          )
-        })
-      )
-    }
-  }
+  // displayAudioRecords = (audioRecords) => {
+  //   if (audioRecords.length === 0) {
+  //     return (
+  //       <div style={{textAlign: 'center', fontWeight: 'bold'}}>
+  //         No audio recordings available for this event
+  //       </div>
+  //     )
+  //   }
+  //   else {
+  //     return (
+  //       audioRecords.map(file => {
+  //         return (
+  //           <div key={file.name} style={{margin: '100px', listStyleType: 'none'}}>
+  //             <li style={{fontWeight: 'bold'}}>{file.name}</li>
+  //             <li>
+  //               <audio
+  //                 style={{float: 'left', width: '80%'}} 
+  //                 title={file.name}
+  //                 controls
+  //                 key={file.name}
+  //                 id='audio'
+  //               >
+  //                 <source src={S3_AUDIO_PATH + file.name} type="audio/mpeg" />
+  //               </audio>
+  //             </li>
+  //           </div>
+  //         )
+  //       })
+  //     )
+  //   }
+  // }
 
   editButtonStyle = {
     display: 'block', 
@@ -237,7 +237,7 @@ class SermonRecordings extends Component {
             </div>
           </div>
           <div>
-            {this.displayAudioByEvent()}
+            {/* {this.displayAudioByEvent()} */}
           </div>
         </div>
         <Footer />
